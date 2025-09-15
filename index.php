@@ -21,7 +21,7 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
 <main class="container">
   <section class="search">
     <!-- Suodatinlomake -->
-    <form class="filters" method="get" action="uusi_mokki.php">
+    <form class="filters" method="get" action="kaikki_mokit.php">
       <label>Sijainti
         <select name="location">
           <option value="">Kaikki</option>
@@ -81,7 +81,7 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
       <img src="images/123.jpeg" alt="Äkkilähdöt" style="width:80px;height:80px;margin-bottom:10px;">
       <h3>Äkkilähdöt</h3>
       <p>Spontaanin matkustajan unelma - katso edulliset Äkkilähtö-mökit täältä!</p>
-      <a href="uusi_mokki.php" class="btn">Katso mökit</a>
+      <a href="kaikki_mokit.php" class="btn">Katso mökit</a>
     </div>
 
     <!-- Laita mökkisi tienaamaan -->
@@ -97,7 +97,7 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
       <img src="images/125.jpeg" alt="UKK" style="width:80px;height:80px;margin-bottom:10px;">
       <h3>Usein kysytyt kysymykset</h3>
       <p>Katso täältä usein kysytyt kysymykset koskien mökin vuokraamista.</p>
-      <a href="uusi_mokki.php" class="btn">Lue lisää</a>
+      <a href="#contact.php" class="btn">Lue lisää</a>
 </section>
 
 <!-- Pieni info-osio kuvineen -->
