@@ -3,7 +3,7 @@ session_start(); // <- tärkeää, jotta $_SESSION toimii
 require 'config.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login_register.php');
+    header('Location: kirjaudu_rekisteroidy.php');
     exit;
 }
 

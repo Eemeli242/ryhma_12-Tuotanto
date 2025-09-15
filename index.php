@@ -5,6 +5,7 @@ include 'header.php';
 
 // Hae kaikki sijainnit suodattimelle
 $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location')->fetchAll(PDO::FETCH_COLUMN);
+
 ?>
 
 <!doctype html>

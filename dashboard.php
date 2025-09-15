@@ -6,7 +6,7 @@ require 'config.php';
 include 'header.php';
 // Tarkista kirjautuminen
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login_register.php');
+    header('Location: kirjaudu_rekisteroidy.php');
     exit;
 }
 
@@ -119,8 +119,8 @@ $cabins = $stmt->fetchAll();
   <td><?=number_format($cabin['price_per_night'], 2)?> €</td>
   <td><?=intval($cabin['booking_count'])?></td>
   <td>
-    <a href="edit_cabin.php?id=<?= $cabin['id'] ?>" class="btn">Muokkaa</a>
-    <a href="delete_cabin.php?id=<?= $cabin['id'] ?>" onclick="return confirm('Haluatko varmasti poistaa mökin?');" class="btn btn-danger">Poista</a>
+    <a href="muokkaa_mokkia.php?id=<?= $cabin['id'] ?>" class="btn">Muokkaa</a>
+    <a href="poista_mokki.php?id=<?= $cabin['id'] ?>" onclick="return confirm('Haluatko varmasti poistaa mökin?');" class="btn btn-danger">Poista</a>
   </td>
 </tr>
 <?php endforeach; ?>

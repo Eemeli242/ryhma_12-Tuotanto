@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
     <nav style="display:flex;align-items:center;gap:15px;">
       <a href="index.php" style="color:#fff;text-decoration:none;font-weight:600;">Etusivu</a>
       <a href="kaikki_mokit.php" style="color:#fff;text-decoration:none;font-weight:600;">Kaikki mökit</a>
-      <a href="<?= isset($_SESSION['user_id']) ? 'uusi_mokki.php' : 'login_register.php'; ?>" class="btn" style="color:#fff;background:#007bff;padding:8px 12px;border-radius:6px;">Ilmoita oma mökkisi</a>
+      <a href="<?= isset($_SESSION['user_id']) ? 'uusi_mokki.php' : 'kirjaudu_rekisteroidy.php'; ?>" class="btn" style="color:#fff;background:#007bff;padding:8px 12px;border-radius:6px;">Ilmoita oma mökkisi</a>
 
       <?php if ($user): ?>
       <div class="profile-dropdown" style="position:relative;">
@@ -33,7 +33,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
       </div>
       <?php else: ?>
-        <a href="login_register.php" style="color:#fff;text-decoration:none;font-weight:600;">Kirjaudu / Rekisteröidy</a>
+        <a href="kirjaudu_rekisteroidy.php" style="color:#fff;text-decoration:none;font-weight:600;">Kirjaudu / Rekisteröidy</a>
       <?php endif; ?>
     </nav>
   </div>
