@@ -14,13 +14,14 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Lomamökit</title>
   <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
 <main class="container">
   <section class="search">
     <!-- Suodatinlomake -->
-    <form class="filters" method="get" action="all_cabins.php">
+    <form class="filters" method="get" action="uusi_mokki.php">
       <label>Sijainti
         <select name="location">
           <option value="">Kaikki</option>
@@ -80,7 +81,7 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
       <img src="images/123.jpeg" alt="Äkkilähdöt" style="width:80px;height:80px;margin-bottom:10px;">
       <h3>Äkkilähdöt</h3>
       <p>Spontaanin matkustajan unelma - katso edulliset Äkkilähtö-mökit täältä!</p>
-      <a href="all_cabins.php" class="btn">Katso mökit</a>
+      <a href="uusi_mokki.php" class="btn">Katso mökit</a>
     </div>
 
     <!-- Laita mökkisi tienaamaan -->
@@ -88,7 +89,7 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
       <img src="images/124.jpeg" alt="Vuokraa mökki" style="width:80px;height:80px;margin-bottom:10px;">
       <h3>Laita mökkisi tienaamaan</h3>
       <p>Onko sinulla oma mökki lähes käyttämättömänä? Tai vuokraatko jo mökkiäsi? Lomarenkaan kautta vuokraustoiminta tarjoaa sinulle tuloja pienemmällä työllä.</p>
-      <a href="add_cabin.php" class="btn">Ilmoita mökki</a>
+      <a href="uusi_mokki.php" class="btn">Ilmoita mökki</a>
     </div>
 
     <!-- Usein kysytyt kysymykset -->
@@ -96,7 +97,7 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
       <img src="images/125.jpeg" alt="UKK" style="width:80px;height:80px;margin-bottom:10px;">
       <h3>Usein kysytyt kysymykset</h3>
       <p>Katso täältä usein kysytyt kysymykset koskien mökin vuokraamista.</p>
-      <a href="all_cabins.php" class="btn">Lue lisää</a>
+      <a href="uusi_mokki.php" class="btn">Lue lisää</a>
 </section>
 
 <!-- Pieni info-osio kuvineen -->

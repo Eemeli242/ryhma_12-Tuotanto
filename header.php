@@ -16,8 +16,8 @@ if (isset($_SESSION['user_id'])) {
     <h1><a href="index.php" style="color:#fff;text-decoration:none;">Lomamökit</a></h1>
     <nav style="display:flex;align-items:center;gap:15px;">
       <a href="index.php" style="color:#fff;text-decoration:none;font-weight:600;">Etusivu</a>
-      <a href="all_cabins.php" style="color:#fff;text-decoration:none;font-weight:600;">Kaikki mökit</a>
-      <a href="<?= isset($_SESSION['user_id']) ? 'add_cabin.php' : 'login_register.php'; ?>" class="btn" style="color:#fff;background:#007bff;padding:8px 12px;border-radius:6px;">Ilmoita oma mökkisi</a>
+      <a href="kaikki_mokit.php" style="color:#fff;text-decoration:none;font-weight:600;">Kaikki mökit</a>
+      <a href="<?= isset($_SESSION['user_id']) ? 'uusi_mokki.php' : 'login_register.php'; ?>" class="btn" style="color:#fff;background:#007bff;padding:8px 12px;border-radius:6px;">Ilmoita oma mökkisi</a>
 
       <?php if ($user): ?>
       <div class="profile-dropdown" style="position:relative;">

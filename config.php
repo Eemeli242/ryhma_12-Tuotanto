@@ -1,5 +1,4 @@
 <?php
-/**Ei tarvitse vaihtaa misään tilanteessa. Ei kosketa. */
 $dbHost = '127.0.0.1';
 $dbName = 'lomamokit';
 $dbUser = 'root';
