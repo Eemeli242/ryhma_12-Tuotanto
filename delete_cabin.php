@@ -3,7 +3,7 @@ require 'config.php';
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: kirjaudu_rekisteroidy.php");
+    header("Location: login.php");
     exit;
 }
 

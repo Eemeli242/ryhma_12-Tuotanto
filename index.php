@@ -5,7 +5,6 @@ include 'header.php';
 
 // Hae kaikki sijainnit suodattimelle
 $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location')->fetchAll(PDO::FETCH_COLUMN);
-
 ?>
 
 <!doctype html>
@@ -19,34 +18,49 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
 </head>
 <body>
 
-<main class="container">
-  <section class="search">
+<main class="frontpage">
+  <section class="search-hero">
     <!-- Suodatinlomake -->
-    <form class="filters" method="get" action="kaikki_mokit.php">
-      <label>Sijainti
-        <select name="location">
-          <option value="">Kaikki</option>
-          <?php foreach ($locations as $loc): ?>
-            <option value="<?=htmlspecialchars($loc)?>"><?=htmlspecialchars($loc)?></option>
-          <?php endforeach; ?>
-        </select>
-      </label>
+    <div class="overlay">
+      <div class="search-content">
+        <h1>Tervetuloa lomamökkien maailmaan</h1>
 
-      <label>Vieraiden määrä
-        <input type="number" name="guests" min="1" placeholder="Kaikki">
-      </label>
+        <!-- Kentät vierekkäin -->
+        <form method="get" action="all_cabins.php">
+          <div class="filters">
+            <label>Sijainti
+              <select name="location">
+                <option value="">Kaikki</option>
+                <?php foreach ($locations as $loc): ?>
+                  <option value="<?=htmlspecialchars($loc)?>"><?=htmlspecialchars($loc)?></option>
+                <?php endforeach; ?>
+              </select>
+            </label>
 
-      <label>Min hinta (€)
-        <input type="number" name="min_price" min="0" step="1" placeholder="Ei rajaa">
-      </label>
+            <label>Vieraiden määrä
+              <input type="number" name="guests" min="1" placeholder="Kaikki">
+            </label>
 
-      <label>Maksimi hinta (€)
-        <input type="number" name="max_price" min="0" step="1" placeholder="Ei rajaa">
-      </label>
+            <label>Min hinta (€)
+              <input type="number" name="min_price" min="0" step="1" placeholder="Ei rajaa">
+            </label>
 
-      <button type="submit">Näytä kaikki mökit</button>
-    </form>
+            <label>Maksimi hinta (€)
+              <input type="number" name="max_price" min="0" step="1" placeholder="Ei rajaa">
+            </label>
+          </div>
+
+          <!-- Nappi omalla rivillä -->
+          <div class="submit-wrapper">
+            <button type="submit">Näytä mökit</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
   </section>
+
+
 
 <!-- Neljä info-artikkelia kuvineen -->
 <section class="info-grid">
@@ -75,30 +89,30 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
 <!-- Ajankohtaista -->
 <section class="highlights">
   <h2>Ajankohtaista</h2>
-  <div class="highlights-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:30px 0;">
+  <div class="highlights-grid">
     
     <!-- Äkkilähdöt -->
-    <div class="highlight-card" style="background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);text-align:center;transition:transform 0.2s;">
-      <img src="images/123.jpeg" alt="Äkkilähdöt" style="width:80px;height:80px;margin-bottom:10px;">
+    <a href="all_cabins.php" class="highlight-card">
+      <img src="images/123.jpeg" alt="Äkkilähdöt">
       <h3>Äkkilähdöt</h3>
-      <p>Spontaanin matkustajan unelma - katso edulliset Äkkilähtö-mökit täältä!</p>
-      <a href="kaikki_mokit.php" class="btn">Katso mökit</a>
-    </div>
+      <p>Spontaanin matkustajan unelma – katso edulliset Äkkilähtö-mökit täältä!</p>
+    </a>
 
     <!-- Laita mökkisi tienaamaan -->
-    <div class="highlight-card" style="background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);text-align:center;transition:transform 0.2s;">
-      <img src="images/124.jpeg" alt="Vuokraa mökki" style="width:80px;height:80px;margin-bottom:10px;">
+    <a href="add_cabin.php" class="highlight-card">
+      <img src="images/124.jpeg" alt="Vuokraa mökki">
       <h3>Laita mökkisi tienaamaan</h3>
       <p>Onko sinulla oma mökki lähes käyttämättömänä? Tai vuokraatko jo mökkiäsi? Lomarenkaan kautta vuokraustoiminta tarjoaa sinulle tuloja pienemmällä työllä.</p>
-      <a href="uusi_mokki.php" class="btn">Ilmoita mökki</a>
-    </div>
+    </a>
 
     <!-- Usein kysytyt kysymykset -->
-    <div class="highlight-card" style="background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);text-align:center;transition:transform 0.2s;">
-      <img src="images/125.jpeg" alt="UKK" style="width:80px;height:80px;margin-bottom:10px;">
+    <a href="faq.php" class="highlight-card">
+      <img src="images/125.jpeg" alt="UKK">
       <h3>Usein kysytyt kysymykset</h3>
       <p>Katso täältä usein kysytyt kysymykset koskien mökin vuokraamista.</p>
-      <a href="#contact.php" class="btn">Lue lisää</a>
+    </a>
+
+  </div>
 </section>
 
 <!-- Pieni info-osio kuvineen -->

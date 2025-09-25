@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 15, 2025 at 08:32 PM
+-- Generation Time: Sep 25, 2025 at 02:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,25 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `lomamokit`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `admins`
---
-
-CREATE TABLE `admins` (
-  `id` int(11) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `admins`
---
-
-INSERT INTO `admins` (`id`, `username`, `password`) VALUES
-(1, 'admin', '$2y$10$UYGryi3HUVpf7tw68oiDRe7L/UJbPS.9C8WqnBRbr6Yejdr.XOV8S');
 
 -- --------------------------------------------------------
 
@@ -69,7 +50,7 @@ INSERT INTO `bookings` (`id`, `cabin_id`, `customer_name`, `customer_email`, `st
 (11, 6, 'Eemeli Määttä', 'maatta.eemeli@sähköposti.fi', '2025-09-15', '2025-09-20', 1, '2025-09-15 15:29:52', 500.00, 'paid'),
 (13, 4, 'Eemeli Määttä', 'maatta.eemeli@sähköposti.fi', '2025-09-15', '2025-09-16', 1, '2025-09-15 15:34:27', 200.00, 'paid'),
 (14, 4, 'Eemeli Määttä', 'dawdwad@gmail.com', '2025-09-21', '2025-09-22', 1, '2025-09-15 15:34:45', 200.00, 'paid'),
-(15, 22, 'awdwad wad', 'dawdwad@gmail.com', '2025-09-15', '2025-09-20', 1, '2025-09-15 17:43:36', 56060.00, 'paid');
+(15, 18, 'awdwad wad', 'wjdajwd2@gmail.com', '2025-09-21', '2025-09-27', 1, '2025-09-21 14:35:41', 66.00, 'paid');
 
 -- --------------------------------------------------------
 
@@ -100,15 +81,11 @@ INSERT INTO `cabins` (`id`, `owner_id`, `name`, `description`, `price_per_night`
 (4, 0, 'Siniranta', 'Siniranta – Kirkasvetisen järven rannalla, jossa vesi heijastaa taivaan syvänsinisen sävyn kesäpäivinä.adaadadddd', 200.00, 6, 'images/cabin4.jpg', 'Jyväskylä', NULL),
 (5, 0, 'Karhunpesä', 'Karhunpesä – Vankka ja lämmin hirsimökki, joka huokuu erämaan voimaa ja kutsuu talvi-iltoina takkatulen äärelle.', 130.00, 2, 'images/cabin5.jpg', 'Turku', NULL),
 (6, 0, 'Lumilinna', 'Lumilinna – Talven taikaa rakastavalle: mökki, joka peittyy kauniiseen lumipeitteeseen ja loistaa kynttilälyhtyjen valossa.', 100.00, 1, 'images/cabin6.jpg', 'Jyväskylä', 1),
+(14, 1, 'Kesäheinä', 'Kesäheinä – Avoimella niityllä sijaitseva mökki, jonka ympärillä tuoksuvat luonnonkukat ja heinäladot.', 11.00, 11, 'images/cabin7.jpg', 'Hämeenlinna', NULL),
 (15, 1, 'Kallioranta', 'Kallioranta – Jyrkän kalliorannan päällä lepäävä paikka, josta voi hypätä suoraan kirkkaaseen veteen.', 111.00, 1, 'images/cabin8.jpg', 'Hämeenlinna', NULL),
 (16, 1, 'Varjokallio', 'Varjokallio – Jylhä kivikko ja varjoisat puut luovat viileän ja salaperäisen tunnelman kuumimpinakin kesäpäivinä.', 1111.00, 12, 'images/cabin9.jpg', 'Hämeenlinna', NULL),
-(17, 1, 'Juusto mökki', 'Ewaeawed', 111.00, 1, 'uploads/1757957392_1757933069_cabin5.jpg', 'Hämeenlinna', NULL),
-(18, 1, 'waeaw', 'awdwad', 222.00, 12, 'uploads/1757957531_1757957392_1757933069_cabin5.jpg', 'Hämeenlinna', NULL),
-(19, 1, 'awdawd', '2e2', 222.00, 111, 'uploads/1757957582_1757957531_1757957392_1757933069_cabin5.jpg', 'Hämeenlinna', NULL),
-(20, 1, 'wadaw', 'wadawd', 112.00, 1, 'uploads/1757957640_1757957582_1757957531_1757957392_1757933069_cabin5.jpg', 'Hämeenlinna', NULL),
-(21, 1, 'sefse', 'f2e1', 11.00, 1, 'uploads/1757957680_1757957640_1757957582_1757957531_1757957392_1757933069_cabin5.jpg', 'Kotka', NULL),
-(22, 1, 'Juusto mökki', 'awdwad', 11212.00, 11, 'uploads/1757958152_1757957680_1757957640_1757957582_1757957531_1757957392_1757933069_cabin5.jpg', 'Kotka', NULL),
-(24, 1, 'awd', 'awdawd', 111.00, 11, 'uploads/1757958917_1757957392_1757933069_cabin5.jpg', 'Kouvola', NULL);
+(17, 1, 'Eemeli', '112321', 111.00, 1, 'uploads/1758464072_123.jpeg', 'Kemi', NULL),
+(18, 1, 'awda', 'aw223aaw', 11.00, 11, 'uploads/1758465256_123.jpeg', 'Kajaani', NULL);
 
 -- --------------------------------------------------------
 
@@ -132,18 +109,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `phone`, `profile_image`, `password`, `created_at`, `balance`) VALUES
-(1, 'eemeli', 'eemeli@gmail.com1', '04000000', 'uploads/1757941196_1231.jpg', '$2y$10$F0B8XZPqtzZYT6S0.F.B3./MGP3TcsuoM3oG7XAMEjQrJDX06WoaG', '2025-09-15 10:43:23', 200950.00);
+(1, 'eemeli', 'eemeli@gmail.com1', '04000000', 'uploads/1758465740_1200x630cw-removebg-preview.png', '$2y$10$F0B8XZPqtzZYT6S0.F.B3./MGP3TcsuoM3oG7XAMEjQrJDX06WoaG', '2025-09-15 10:43:23', 200950.00);
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `admins`
---
-ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `bookings`
@@ -171,22 +141,16 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `admins`
---
-ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `cabins`
 --
 ALTER TABLE `cabins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`

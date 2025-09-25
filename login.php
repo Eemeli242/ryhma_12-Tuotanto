@@ -13,7 +13,7 @@ if ($view === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user && password_verify($_POST['password'], $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
-        header("Location: uusi_mokki.php");
+        header("Location: index.php");
         exit;
     } else {
         $message = "Virheellinen käyttäjätunnus tai salasana";
@@ -67,8 +67,8 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     $user_id = $pdo->lastInsertId();
                     $_SESSION['user_id'] = $user_id;
 
-                    // Ohjataan suoraan uusi_mokki.php
-                    header("Location: uusi_mokki.php");
+                    // Ohjataan suoraan add_cabin.php
+                    header("Location: add_cabin.php");
                     exit;
 
                 } catch (PDOException $e) {

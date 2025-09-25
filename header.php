@@ -12,17 +12,21 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <header>
-  <div class="container header-flex" style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;">
-    <h1><a href="index.php" style="color:#fff;text-decoration:none;">Lomamökit</a></h1>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+
+  <div class="header-flex" style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;">
+<a href="index.php"><img src="images/logo.png" width="100" alt="Lomamökki logo" style="margin-left:40px;"></a>
     <nav style="display:flex;align-items:center;gap:15px;">
       <a href="index.php" style="color:#fff;text-decoration:none;font-weight:600;">Etusivu</a>
-      <a href="kaikki_mokit.php" style="color:#fff;text-decoration:none;font-weight:600;">Kaikki mökit</a>
-      <a href="<?= isset($_SESSION['user_id']) ? 'uusi_mokki.php' : 'kirjaudu_rekisteroidy.php'; ?>" class="btn" style="color:#fff;background:#007bff;padding:8px 12px;border-radius:6px;">Ilmoita oma mökkisi</a>
+      <a href="all_cabins.php" style="color:#fff;text-decoration:none;font-weight:600;">Kaikki mökit</a>
+      <a href="<?= isset($_SESSION['user_id']) ? 'add_cabin.php' : 'login.php'; ?>" class="btn" style="color:#fff;background:#40572e;padding:8px 12px;border-radius:6px;">Ilmoita oma mökkisi</a>
 
       <?php if ($user): ?>
       <div class="profile-dropdown" style="position:relative;">
         <a href="#" style="display:flex;align-items:center;color:#fff;text-decoration:none;">
-          <img src="<?=htmlspecialchars($user['profile_image'] ?? 'default-avatar.png')?>" alt="Profiili" class="profile-pic" style="width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:8px;">
+          <img src="<?=htmlspecialchars($user['profile_image'] ?? 'default-avatar.png')?>" alt="Profiili" class="profile-pic" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin-right:8px;">
           <?=htmlspecialchars($user['username'])?>
           <span style="margin-left:8px;font-weight:600;">(Saldo: €<?=number_format($user_balance, 2)?>)</span>
         </a>
@@ -33,7 +37,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
       </div>
       <?php else: ?>
-        <a href="kirjaudu_rekisteroidy.php" style="color:#fff;text-decoration:none;font-weight:600;">Kirjaudu / Rekisteröidy</a>
+        <a href="login.php" style="color:#fff;text-decoration:none;font-weight:600;">Kirjaudu / Rekisteröidy</a>
       <?php endif; ?>
     </nav>
   </div>

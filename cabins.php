@@ -53,7 +53,7 @@ if (!$cabin) {
 
       <section class="booking">
         <h2>Varaa mökki</h2>
-        <form id="bookingForm" action="varaus.php" method="post">
+        <form id="bookingForm" action="book.php" method="post">
           <input type="hidden" name="cabin_id" value="<?=htmlspecialchars($cabin['id'])?>">
           <label>Etunimi & Sukunimi<br><input name="customer_name" required></label>
           <label>Sähköposti<br><input type="email" name="customer_email" required></label>

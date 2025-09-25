@@ -3,7 +3,7 @@ require 'config.php';
 include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: kirjaudu_rekisteroidy.php");
+    header("Location: login_register.php");
     exit;
 }
 
@@ -50,18 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Päivitä tiedot tietokantaan
+        // Päivitä tiedot tietokantaan vain jos ei virheitä
         if (!$message) {
             $stmt = $pdo->prepare("
                 UPDATE users SET username = ?, email = ?, phone = ?, profile_image = ? WHERE id = ?
             ");
             $stmt->execute([$username, $email, $phone, $profileImage, $_SESSION['user_id']]);
-            $message = "Profiili päivitetty!";
-            // Päivitä $user muuttuja näkymää varten
-            $user['username'] = $username;
-            $user['email'] = $email;
-            $user['phone'] = $phone;
-            $user['profile_image'] = $profileImage;
+            
+            // Päivitys onnistui → ohjataan dashboardille
+            header("Location: dashboard.php");
+            exit;
         }
     }
 }
@@ -75,12 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="admin-container">
+<main class="add_cabin">
   <h1>Muokkaa profiilia</h1>
-  <p><?=htmlspecialchars($message)?></p>
-  <p><strong>Saldo:</strong> €<?=number_format($user['balance'] ?? 0, 2)?></p>
 
-  <form method="post" enctype="multipart/form-data" class="admin-form">
+  <!-- Näytetään virheviesti jos olemassa -->
+  <?php if($message): ?>
+    <p style="color:#d33; font-weight:500; text-align:center; margin-bottom:15px;">
+        <?=htmlspecialchars($message)?>
+    </p>
+  <?php endif; ?>
+
+  <form method="post" enctype="multipart/form-data">
       <label>Nykyinen salasana
         <input type="password" name="current_password" required>
       </label>
@@ -95,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </label>
       <label>Profiilikuva
         <?php if (!empty($user['profile_image'])): ?>
-            <img src="<?=htmlspecialchars($user['profile_image'])?>" alt="Profiili" style="width:80px;height:80px;border-radius:50%;display:block;margin-bottom:10px;">
+            <img src="<?=htmlspecialchars($user['profile_image'])?>" alt="Profiili" style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-right:8px;">
         <?php endif; ?>
         <input type="file" name="profile_image" accept="image/*">
       </label>

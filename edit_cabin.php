@@ -73,8 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $locations = [
     'Helsinki','Espoo','Tampere','Vantaa','Oulu','Turku',
     'Jyväskylä','Lahti','Kuopio','Pori','Lappeenranta','Vaasa',
-    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola'
+    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola',
+    'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
+    'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
 ];
+
 ?>
 <!doctype html>
 <html lang="fi">
@@ -104,7 +107,7 @@ $locations = [
 </style>
 </head>
 <body>
-<main class="admin-container">
+<main class="add_cabin">
   <h1>Muokkaa mökkiä</h1>
   <p><?=htmlspecialchars($message)?></p>
 

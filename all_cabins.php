@@ -66,7 +66,7 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
   <style>
     .btn {
       display: inline-block;
-      background-color: #007bff;
+      background-color: #40572e;
       color: #fff;
       padding: 10px 16px;
       border-radius: 8px;
@@ -85,7 +85,7 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
 <main class="container">
 
 <section class="search">
-  <form class="filters" method="get" action="kaikki_mokit.php">
+  <form class="filters" method="get" action="all_cabins.php">
     <label>Sijainti
       <select name="location">
         <option value="">Kaikki</option>
@@ -95,13 +95,13 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
       </select>
     </label>
     <label>Vieraiden määrä
-      <input type="number" name="guests" min="1" value="<?=($guests>0)?$guests:''?>">
+      <input type="number" name="guests" min="1" value="<?=($guests>0)?$guests:''?>" placeholder="Kaikki"> 
     </label>
     <label>Min hinta (€)
-      <input type="number" name="min_price" min="0" step="1" value="<?=($minPrice>0)?$minPrice:''?>">
+      <input type="number" name="min_price" min="0" step="1" value="<?=($minPrice>0)?$minPrice:''?>"placeholder="Ei rajaa"> 
     </label>
     <label>Maksimi hinta (€)
-      <input type="number" name="max_price" min="0" step="1" value="<?=($maxPrice>0)?$maxPrice:''?>">
+      <input type="number" name="max_price" min="0" step="1" value="<?=($maxPrice>0)?$maxPrice:''?>" placeholder="Ei rajaa"> 
     </label>
     <label>Saapuu
       <input type="text" id="start_date" name="start_date" value="<?=htmlspecialchars($startDate)?>" placeholder="Valitse aloituspäivä">
@@ -128,7 +128,7 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
         <p><strong>Maksimi vieraita:</strong> <?=htmlspecialchars($c['max_guests'])?></p>
         <p><strong>Sijainti:</strong> <?=htmlspecialchars($c['location'])?></p>
         <p><strong>Varauksia yhteensä:</strong> <?=htmlspecialchars($c['booking_count'])?></p>
-        <a href="mokit.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
+        <a href="cabins.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
       </article>
     <?php endforeach; ?>
   </div>
@@ -147,7 +147,7 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
         <p><strong>Hinta / yö:</strong> €<?=number_format($c['price_per_night'],2)?></p>
         <p><strong>Maksimi vieraita:</strong> <?=htmlspecialchars($c['max_guests'])?></p>
         <p><strong>Sijainti:</strong> <?=htmlspecialchars($c['location'])?></p>
-        <a href="mokit.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
+        <a href="cabins.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
       </article>
     <?php endforeach; ?>
   <?php else: ?>

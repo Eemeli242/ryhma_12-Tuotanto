@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Hae viimeksi lisätyn mökin ID
                 $cabinId = $pdo->lastInsertId();
                 // Ohjaa suoraan mökin sivulle
-                header("Location: mokit.php?id=" . $cabinId);
+                header("Location: cabins.php?id=" . $cabinId);
                 exit;
             } else {
                 $message = "Kuvan lataus epäonnistui.";
@@ -63,8 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $locations = [
     'Helsinki','Espoo','Tampere','Vantaa','Oulu','Turku',
     'Jyväskylä','Lahti','Kuopio','Pori','Lappeenranta','Vaasa',
-    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola'
+    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola',
+    'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
+    'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
 ];
+
 ?>
 <!doctype html>
 <html lang="fi">
@@ -75,10 +78,10 @@ $locations = [
 
 </head>
 <body>
-<main class="admin-container">
+<main class="add_cabin">
   <h1>Lisää uusi mökki</h1>
   <p><?=htmlspecialchars($message)?></p>
-  <form method="post" enctype="multipart/form-data" class="admin-form">
+  <form method="post" enctype="multipart/form-data">
       <label>Nimi
         <input name="name" required>
       </label>
