@@ -20,15 +20,16 @@ Käyttäjä voi:
 - lisätä mökkejä vuokrattavaksi
 - tarkastella omia mökkejä ja niihin liittyviä varauksia
 - selata muiden lisäämiä mökkejä
-- sekä vuokrata mökkejä
+- vuokrata mökkejä
+- sekä antaa arvioinnin varauksesta
 
 Sovellus käyttää tietokantaa (phpmyadmin (sql)) mökkien, varausten ja käyttäjien tietojen tallentamiseen. PHP backendi käsittelee lomakkeet, validoi syötteen ja palauttaa pyydetyt tiedot näkymiin.
 
 ## Teknologiat
-- **PHP** – backend ja logiikka
-- **MySQL** – tietojen tallennus ja haku
-- **HTML5 / CSS3 / JavaScript** – käyttöliittymä
-- **Session management** – kirjautumisen hallinta
+- **Backend**: PHP  
+- **Frontend**: HTML, CSS, Bootstrap
+- **Tietokanta**: MySQL  
+- **Versionhallinta**: Git
 
 ## Asennus XAMPP:ille
 
@@ -75,22 +76,7 @@ Voit ladata projektin kahdella tavalla:
 
 ---
 
-### 4️⃣ Muokkaa `config.php`
-Avaa projektin `config.php` ja varmista että tiedot ovat oikein:
-
-```php
-<?php
-$host = "localhost";
-$dbname = "lomamokit"; // tietokannan nimi jonka loit
-$username = "root"; // XAMPP:ssa root on oletus
-$password = ""; // rootilla ei ole salasanaa oletuksena
-```
-
-Tallenna tiedosto.
-
----
-
-### 5️⃣ Käynnistä projekti
+### 4️⃣ Käynnistä projekti
 Avaa selain ja mene osoitteeseen:
 
 ```
@@ -101,34 +87,26 @@ Jos kaikki on oikein, etusivu latautuu ja voit rekisteröityä/kirjautua sisää
 
 ---
 
-### 6️⃣ Vianetsintä
-- **Tietokantavirhe?**  
-  Varmista tietokannan nimi ja käyttäjätunnus `config.php`-tiedostossa
-- **Kuvat eivät tallennu?**  
-  Varmista että `uploads/`-kansio on olemassa ja sillä on kirjoitusoikeudet
-
 ## Käyttöohjeet
-- **Rekisteröityminen / kirjautuminen:** Luo tili tai kirjaudu sisään
+- **Rekisteröityminen / kirjautuminen:** Luo tili tai kirjaudu sisään (eemeli, salasana123)
 - **Mökkien lisääminen:** Käytä `add_cabin.php`-sivua lisätäksesi mökki vuokrattavaksi
 - **Profiilin muokkaus:** Päivitä sähköpostisi ja profiilikuvasi `edit_profile.php`-sivulla
 - **Dashboard:** Näe omat mökit ja niiden varaukset `dashboard.php`-sivulla
 
 ## Roolit
-- **Käyttäjä:** voi selata ja varata mökkejä
-- **Käyttäjä:** voi lisätä ja hallita omia mökkejään
-- **Admin:** (Ei toteutettu vielä 15.09.2025) hallinnoi käyttäjiä ja mökkejä
+- **Käyttäjä:** voi selata ja varata mökkejä lisätä ja hallita omia mökkejään
+- **Admin:** Adminkäyttäjä voivat hallita kaikkia käyttäjiä, mökkejä ja varauksia.
 
 ## Tietokanta
 Projektissa käytetään relaatiotietokantaa, joka sisältää mm. seuraavat taulut:
 - **users** – käyttäjien tiedot (nimi, sähköposti, salasana, profiilikuva)
 - **cabins** – mökkien tiedot (nimi, sijainti, hinta, kuvaus, kuva, omistaja)
 - **bookings** – varaustiedot (kuka varasi, mikä mökki, ajankohta)
+- **reviews** - arvosana mökille (komentti, raiting, joka näkyy mökinvarauksessa sekä etusivulla (keskiarvo)
 
 ## Kehitys
 Mahdollisia jatkokehityskohteita:
 - Varausten maksujärjestelmä
-- Arvostelut ja kommentit mökeille
-- Parempi hakutoiminto ja suodattimet
 
 ## Lisenssi
 Tämä projekti on avoimen lähdekoodin ja julkaistu [MIT-lisenssillä](https://opensource.org/licenses/MIT).
