@@ -1,7 +1,6 @@
 <?php
-session_start(); // <- tärkeää, jotta $_SESSION toimii
+session_start();
 require 'config.php';
-
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login_register.php');
@@ -65,10 +64,13 @@ $stmt->execute([$price, $_SESSION['user_id']]);
 $stmt = $pdo->prepare("UPDATE users SET balance = balance + ? WHERE id = ?");
 $stmt->execute([$price, $cabin['owner_id']]);
 
-// Lisää varaus tietokantaan
-$stmt = $pdo->prepare('INSERT INTO bookings (cabin_id, customer_name, customer_email, start_date, end_date, guests, paid, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-$stmt->execute([$cabin_id, $name, $email, $start, $end, $guests, $price, 'paid']);
+// Lisää varaus tietokantaan, nyt customer_id mukana
+$stmt = $pdo->prepare('
+    INSERT INTO bookings (cabin_id, customer_id, customer_name, customer_email, start_date, end_date, guests, paid, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+');
+$stmt->execute([$cabin_id, $_SESSION['user_id'], $name, $email, $start, $end, $guests, $price, 'paid']);
 
-header('Location: booking_confirm.php?id=' . $pdo->lastInsertId());
+header('Location: booking_success.php?id=' . $pdo->lastInsertId());
 exit;
 ?>

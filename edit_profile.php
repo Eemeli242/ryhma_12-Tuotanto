@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $message = '';
 
-// Hae käyttäjän tiedot
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+// Hae käyttäjän tiedot (vain tarvittavat sarakkeet)
+$stmt = $pdo->prepare("SELECT username, email, phone, profile_image, password FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
@@ -24,11 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Tarkista salasana
     if (!password_verify($currentPassword, $user['password'])) {
         $message = "Nykyinen salasana on väärin. Profiilia ei päivitetty.";
-    } else {
-        // Käsittele profiilikuvan upload
+    } 
+    // Käyttäjänimi vain kirjaimia ja alaviiva
+    elseif (!preg_match('/^[a-zA-Z_]+$/', $username)) {
+        $message = "Käyttäjänimi voi sisältää vain kirjaimia ja alaviivan (_).";
+    } 
+    // Puhelin vain numeroita
+    elseif (!preg_match('/^[0-9]+$/', $phone)) {
+        $message = "Puhelinnumero voi sisältää vain numeroita.";
+    } 
+    // Sähköposti validi
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Sähköposti ei ole validi.";
+    } 
+    else {
+        // Profiilikuvan käsittely
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
             $targetDir = "uploads/";
-            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+            if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
 
             $fileTmp  = $_FILES["profile_image"]["tmp_name"];
             $fileName = basename($_FILES["profile_image"]["name"]);
@@ -76,11 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main class="add_cabin">
   <h1>Muokkaa profiilia</h1>
 
-  <!-- Näytetään virheviesti jos olemassa -->
   <?php if($message): ?>
-    <p style="color:#d33; font-weight:500; text-align:center; margin-bottom:15px;">
-        <?=htmlspecialchars($message)?>
-    </p>
+    <p class="error-message"><?=htmlspecialchars($message)?></p>
   <?php endif; ?>
 
   <form method="post" enctype="multipart/form-data">
@@ -98,13 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </label>
       <label>Profiilikuva
         <?php if (!empty($user['profile_image'])): ?>
-            <img src="<?=htmlspecialchars($user['profile_image'])?>" alt="Profiili" style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-right:8px;">
+            <img src="<?=htmlspecialchars($user['profile_image'])?>" alt="Profiili" class="profile-preview">
         <?php endif; ?>
         <input type="file" name="profile_image" accept="image/*">
       </label>
       <button type="submit">Tallenna muutokset</button>
   </form>
-  <a href="dashboard.php" class="btn" style="margin-top:15px;">Takaisin dashboardille</a>
+  <a href="dashboard.php" class="btn back-btn">Takaisin dashboardille</a>
 </main>
 </body>
 </html>

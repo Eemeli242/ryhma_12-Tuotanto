@@ -1,9 +1,9 @@
 <?php
-session_start(); // <- tärkeää, jotta $_SESSION toimii
+session_start();
 require 'config.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: kirjaudu_rekisteroidy.php');
+    header('Location: login_register.php');
     exit;
 }
 
@@ -25,13 +25,12 @@ $sd = DateTime::createFromFormat('Y-m-d', $start);
 $ed = DateTime::createFromFormat('Y-m-d', $end);
 if (!$sd || !$ed || $ed <= $sd) die('Virheelliset päivämäärät.');
 
-// Hae mökin hinta ja omistaja
+// Hae mökin tiedot
 $stmt = $pdo->prepare("SELECT price_per_night, owner_id FROM cabins WHERE id = ?");
 $stmt->execute([$cabin_id]);
 $cabin = $stmt->fetch();
 if (!$cabin) die('Mökkiä ei löytynyt.');
 
-// Lasketaan kokonaishinta
 $days = $ed->diff($sd)->days;
 $price = (float)$cabin['price_per_night'] * $days;
 
@@ -39,35 +38,41 @@ $price = (float)$cabin['price_per_night'] * $days;
 $stmt = $pdo->prepare("SELECT balance FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
-$user_balance = (float)$user['balance'];
+$user_balance = (float)($user['balance'] ?? 0);
 
-// Tarkista saldo
 if ($user_balance < $price) die('Ei tarpeeksi saldoa varaukseen.');
 
 // Tarkista päällekkäiset varaukset
 $stmt = $pdo->prepare('SELECT COUNT(*) FROM bookings WHERE cabin_id = ? AND start_date < ? AND end_date > ?');
 $stmt->execute([$cabin_id, $end, $start]);
-$count = $stmt->fetchColumn();
+$overlap = $stmt->fetchColumn();
+if ($overlap > 0) die('Valitettavasti mökki on varattu kyseiselle ajalle.');
 
-if (!empty($_POST['check_only'])) {
-    echo $count > 0 ? 'VARATTU' : 'OK';
+// --- Tietokantatransaktio ---
+try {
+    $pdo->beginTransaction();
+
+    // Vähennä asiakkaan saldo
+    $stmt = $pdo->prepare("UPDATE users SET balance = balance - ? WHERE id = ?");
+    $stmt->execute([$price, $_SESSION['user_id']]);
+
+    // Lisää omistajan saldo
+    $stmt = $pdo->prepare("UPDATE users SET balance = balance + ? WHERE id = ?");
+    $stmt->execute([$price, $cabin['owner_id']]);
+
+    // Lisää varaus
+    $stmt = $pdo->prepare('
+        INSERT INTO bookings (cabin_id, customer_name, customer_email, start_date, end_date, guests, paid, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ');
+    $stmt->execute([$cabin_id, $name, $email, $start, $end, $guests, $price, 'paid']);
+
+    $booking_id = $pdo->lastInsertId();
+    $pdo->commit();
+
+    header('Location: booking_success.php?id=' . $booking_id);
     exit;
+} catch (PDOException $e) {
+    $pdo->rollBack();
+    die('Varauksen käsittely epäonnistui: ' . $e->getMessage());
 }
-
-if ($count > 0) die('Valitettavasti mökki on varattu kyseiselle ajalle.');
-
-// Vähennä käyttäjän saldo
-$stmt = $pdo->prepare("UPDATE users SET balance = balance - ? WHERE id = ?");
-$stmt->execute([$price, $_SESSION['user_id']]);
-
-// Lisää mökin omistajan saldo
-$stmt = $pdo->prepare("UPDATE users SET balance = balance + ? WHERE id = ?");
-$stmt->execute([$price, $cabin['owner_id']]);
-
-// Lisää varaus tietokantaan
-$stmt = $pdo->prepare('INSERT INTO bookings (cabin_id, customer_name, customer_email, start_date, end_date, guests, paid, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-$stmt->execute([$cabin_id, $name, $email, $start, $end, $guests, $price, 'paid']);
-
-header('Location: varaus_vahvistus.php?id=' . $pdo->lastInsertId());
-exit;
-?>

@@ -7,17 +7,21 @@ $view = $_GET['view'] ?? 'login';
 
 // LOGIN
 if ($view === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username=?");
-    $stmt->execute([$_POST['username']]);
-    $user = $stmt->fetch();
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    if ($user && password_verify($_POST['password'], $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        header("Location: index.php");
-        exit;
-    } else {
-        $message = "Virheellinen käyttäjätunnus tai salasana";
+    if ($username && $password) {
+        $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            header("Location: index.php");
+            exit;
+        }
     }
+    $message = "Virheellinen käyttäjätunnus tai salasana";
 }
 
 // REGISTER
@@ -34,9 +38,9 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = "Salasanat eivät täsmää.";
         } else {
             // Profiilikuva
-            if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
+            if (!empty($_FILES['profile_image']['tmp_name']) && $_FILES['profile_image']['error'] === 0) {
                 $fileTmp = $_FILES['profile_image']['tmp_name'];
-                $fileName = basename($_FILES['profile_image']['name']);
+                $fileName = preg_replace("/[^a-zA-Z0-9_\.-]/", "_", basename($_FILES['profile_image']['name']));
                 $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                 $allowed = ['jpg','jpeg','png','gif'];
 
@@ -47,12 +51,12 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     $message = "Sallitut kuvatyypit: JPG, PNG, GIF.";
                 } else {
                     $targetDir = "uploads/";
-                    if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+                    if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
                     $targetFile = $targetDir . time() . "_" . $fileName;
-                    if (move_uploaded_file($fileTmp, $targetFile)) {
-                        $profile_image = $targetFile;
-                    } else {
+                    if (!move_uploaded_file($fileTmp, $targetFile)) {
                         $message = "Kuvan tallennus epäonnistui.";
+                    } else {
+                        $profile_image = $targetFile;
                     }
                 }
             }
@@ -62,15 +66,9 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO users (username, email, phone, password, profile_image) VALUES (?, ?, ?, ?, ?)");
                 try {
                     $stmt->execute([$username, $email, $phone, $password, $profile_image]);
-
-                    // Automaattinen kirjautuminen
-                    $user_id = $pdo->lastInsertId();
-                    $_SESSION['user_id'] = $user_id;
-
-                    // Ohjataan suoraan add_cabin.php
+                    $_SESSION['user_id'] = $pdo->lastInsertId();
                     header("Location: add_cabin.php");
                     exit;
-
                 } catch (PDOException $e) {
                     $message = "Virhe: käyttäjänimi, sähköposti tai puhelin on jo käytössä.";
                 }
@@ -109,7 +107,7 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
       <button type="submit">Kirjaudu</button>
     </form>
     <div class="auth-links">
-      <a href="#">Unohditko salasanasi?</a><br>
+      <a href="forgot.php">Unohditko salasanasi?</a><br>
       <a href="?view=register">Uusi käyttäjä? Rekisteröidy</a>
     </div>
     <?php endif; ?>

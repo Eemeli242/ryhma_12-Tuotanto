@@ -2,7 +2,6 @@
 require 'config.php';
 include 'header.php';
 
-
 $location  = $_GET['location'] ?? '';
 $guests    = (int)($_GET['guests'] ?? 0);
 $minPrice  = (float)($_GET['min_price'] ?? 0);
@@ -53,7 +52,8 @@ $topCabinsStmt = $pdo->query("
     LIMIT 4
 ");
 
-$topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
+$topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <!doctype html>
 <html lang="fi">
@@ -63,25 +63,8 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
   <title>Kaikki lomamökit</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <style>
-    .btn {
-      display: inline-block;
-      background-color: #40572e;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background-color 0.2s, transform 0.2s;
-    }
-    .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-    .filters label { flex: 1 1 150px; font-weight: 500; }
-    .filters input, .filters select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
-    .card img { max-height: 200px; object-fit: cover; }
-  </style>
 </head>
 <body>
-    <!-- Suodatinlomake -->
 <main class="container">
 
 <section class="search">
@@ -111,23 +94,51 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
     </label>
   </form>
 </section>
-    <!-- Eniten varatut lomamökit -->
+
 <?php if ($topCabins): ?>
 <section style="margin:40px 0;">
   <h2>Eniten varatut lomamökit – 4 parasta</h2>
   <div class="grid">
     <?php foreach ($topCabins as $c): ?>
       <article class="card top-card">
-        <h3><?=htmlspecialchars($c['name'])?></h3>
         <?php if ($c['image']): ?>
-          <img src="<?=htmlspecialchars($c['image'])?>" alt="<?=htmlspecialchars($c['name'])?>">
+          <img src="<?=htmlspecialchars($c['image'])?>" alt="<?=htmlspecialchars($c['name'])?>" loading="lazy">
         <?php endif; ?>
-<p class="description"><?= nl2br(htmlspecialchars($c['description'])) ?></p>
+        <h3><?=htmlspecialchars($c['name'])?></h3>
+        <p class="description"><?= nl2br(htmlspecialchars($c['description'])) ?></p>
 
-        <p><strong>Hinta / yö:</strong> €<?=number_format($c['price_per_night'],2)?></p>
-        <p><strong>Maksimi vieraita:</strong> <?=htmlspecialchars($c['max_guests'])?></p>
-        <p><strong>Sijainti:</strong> <?=htmlspecialchars($c['location'])?></p>
-        <p><strong>Varauksia yhteensä:</strong> <?=htmlspecialchars($c['booking_count'])?></p>
+        <div class="info-row">
+          <span class="label">Hinta / yö:</span>
+          <span class="value">€<?=number_format($c['price_per_night'],2)?></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Maksimi vieraita:</span>
+          <span class="value"><?=htmlspecialchars($c['max_guests'])?></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Sijainti:</span>
+          <span class="value"><?=htmlspecialchars($c['location'])?></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Varauksia yhteensä:</span>
+          <span class="value"><?=htmlspecialchars($c['booking_count'])?></span>
+        </div>
+
+        <?php
+        $ratingStmt = $pdo->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE cabin_id = ?");
+        $ratingStmt->execute([$c['id']]);
+        $ratingData = $ratingStmt->fetch(PDO::FETCH_ASSOC);
+        $avg_rating = round($ratingData['avg_rating']);
+        $review_count = $ratingData['review_count'];
+        ?>
+            <span class="stars">
+                <?php for($i=1;$i<=5;$i++): ?>
+                    <?= $i <= $avg_rating ?'★':'<span>★</span>' ?>
+                <?php endfor; ?>
+            </span>
+            (<?=$review_count?> arvostelua)
+        </p>
+
         <a href="cabins.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
       </article>
     <?php endforeach; ?>
@@ -135,25 +146,52 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC); ?>
 </section>
 <?php endif; ?>
 
-<div class="grid">
-  <?php if ($cabins): ?>
+<section>
+  <h2>Kaikki mökit</h2>
+  <div class="grid">
     <?php foreach ($cabins as $c): ?>
       <article class="card">
-        <h2><?=htmlspecialchars($c['name'])?></h2>
         <?php if ($c['image']): ?>
-          <img src="<?=htmlspecialchars($c['image'])?>" alt="<?=htmlspecialchars($c['name'])?>">
+          <img src="<?=htmlspecialchars($c['image'])?>" alt="<?=htmlspecialchars($c['name'])?>" loading="lazy">
         <?php endif; ?>
-        <p><?=nl2br(htmlspecialchars($c['description']))?></p>
-        <p><strong>Hinta / yö:</strong> €<?=number_format($c['price_per_night'],2)?></p>
-        <p><strong>Maksimi vieraita:</strong> <?=htmlspecialchars($c['max_guests'])?></p>
-        <p><strong>Sijainti:</strong> <?=htmlspecialchars($c['location'])?></p>
+        <h3><?=htmlspecialchars($c['name'])?></h3>
+        <p class="description"><?= nl2br(htmlspecialchars($c['description'])) ?></p>
+
+        <div class="info-row">
+          <span class="label">Hinta / yö:</span>
+          <span class="value">€<?=number_format($c['price_per_night'],2)?></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Maksimi vieraita:</span>
+          <span class="value"><?=htmlspecialchars($c['max_guests'])?></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Sijainti:</span>
+          <span class="value"><?=htmlspecialchars($c['location'])?></span>
+        </div>
+
+        <?php
+        $ratingStmt = $pdo->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE cabin_id = ?");
+        $ratingStmt->execute([$c['id']]);
+        $ratingData = $ratingStmt->fetch(PDO::FETCH_ASSOC);
+        $avg_rating = round($ratingData['avg_rating']);
+        $review_count = $ratingData['review_count'];
+        ?>
+
+            <span class="stars">
+                <?php for($i=1;$i<=5;$i++): ?>
+                    <?= $i <= $avg_rating ? '★' : '<span>★</span>' ?>
+                <?php endfor; ?>
+            </span>
+            (<?=$review_count?> arvostelua)
+        </p>
+
         <a href="cabins.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
       </article>
     <?php endforeach; ?>
-  <?php else: ?>
-    <p>Ei mökkejä valituilla suodattimilla löytynyt.</p>
-  <?php endif; ?>
-</div>
+  </div>
+</section>
+
 </main>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
@@ -183,9 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }));
 });
 </script>
-</body>
-</html>
-</main>
 
 <?php include 'footer.php'; ?>
 </body>

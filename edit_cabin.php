@@ -3,15 +3,15 @@ require 'config.php';
 include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: kirjaudu_rekisteroidy.php");
+    header("Location: login_register.php");
     exit;
 }
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) die('Mökkiä ei löytynyt.');
 
-// Hae mökki ja tarkista omistajuus
-$stmt = $pdo->prepare("SELECT * FROM cabins WHERE id = ? AND owner_id = ?");
+// Hae mökki ja tarkista omistajuus (vain tarvittavat sarakkeet)
+$stmt = $pdo->prepare("SELECT id, name, description, price_per_night, max_guests, location, image FROM cabins WHERE id = ? AND owner_id = ?");
 $stmt->execute([$id, $_SESSION['user_id']]);
 $cabin = $stmt->fetch();
 if (!$cabin) die('Et voi muokata tätä mökkiä.');
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Käsittele kuvan upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $targetDir = "uploads/";
-        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+        if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
 
         $fileTmp  = $_FILES["image"]["tmp_name"];
         $fileName = basename($_FILES["image"]["name"]);
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "Kuvan lataus epäonnistui.";
             }
         } else {
-            $message = "Vain JPGja PNG kuvat sallittu.";
+            $message = "Vain JPG, JPEG, PNG ja GIF kuvat sallittu.";
         }
     }
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ");
         $stmt->execute([$name, $description, $price, $maxGuests, $image, $location, $id, $_SESSION['user_id']]);
         $message = "Mökki päivitetty!";
-        // Päivitetään $cabin esikatselua varten
+        // Päivitä esikatselu
         $cabin = array_merge($cabin, [
             'name'=>$name,
             'description'=>$description,
@@ -77,7 +77,6 @@ $locations = [
     'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
     'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
 ];
-
 ?>
 <!doctype html>
 <html lang="fi">
@@ -85,40 +84,21 @@ $locations = [
 <meta charset="utf-8">
 <title>Muokkaa mökkiä</title>
 <link rel="stylesheet" href="style.css">
-<style>
-.edit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-}
-.cabin-preview img {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    margin-bottom: 15px;
-    border-radius: 10px;
-}
-.cabin-preview .cabin-info p {
-    margin: 8px 0;
-}
-.admin-form input, .admin-form textarea, .admin-form select {
-    width: 100%;
-}
-</style>
 </head>
 <body>
 <main class="add_cabin">
   <h1>Muokkaa mökkiä</h1>
-  <p><?=htmlspecialchars($message)?></p>
+  <?php if($message): ?>
+    <p class="message"><?=htmlspecialchars($message)?></p>
+  <?php endif; ?>
 
   <div class="edit-grid">
-    <!-- Muokkauslomake -->
     <form method="post" enctype="multipart/form-data" class="admin-form">
         <label>Nimi
           <input type="text" name="name" value="<?=htmlspecialchars($cabin['name'])?>" required>
         </label>
         <label>Kuvaus
-          <textarea name="description"><?=htmlspecialchars($cabin['description'])?></textarea>
+          <textarea name="description"style="height: 188px; width: 480px;font-size: 17;" ><?=htmlspecialchars($cabin['description']) ?> </textarea> 
         </label>
         <label>Hinta / yö
           <input type="number" step="0.01" name="price_per_night" value="<?=htmlspecialchars($cabin['price_per_night'])?>" required>
@@ -128,7 +108,7 @@ $locations = [
         </label>
         <label>Kuva
           <?php if (!empty($cabin['image'])): ?>
-              <img src="<?=htmlspecialchars($cabin['image'])?>" alt="Mökki" style="width:150px;height:auto;margin-bottom:10px;">
+              <img src="<?=htmlspecialchars($cabin['image'])?>" alt="Mökki" class="cabin-thumb">
           <?php endif; ?>
           <input type="file" name="image" accept="image/*">
         </label>
@@ -145,11 +125,10 @@ $locations = [
         <button type="submit">Tallenna muutokset</button>
     </form>
 
-    <!-- Esikatselu kuten cabins.php -->
     <section class="cabin-preview">
         <h2>Esikatselu</h2>
         <?php if (!empty($cabin['image'])): ?>
-          <img src="<?=htmlspecialchars($cabin['image'])?>" alt="<?=htmlspecialchars($cabin['name'])?>">
+          <img src="<?=htmlspecialchars($cabin['image'])?>" alt="<?=htmlspecialchars($cabin['name'])?>" class="cabin-thumb">
         <?php endif; ?>
         <div class="cabin-info">
           <p><strong>Nimi:</strong> <?=htmlspecialchars($cabin['name'])?></p>
@@ -161,7 +140,7 @@ $locations = [
     </section>
   </div>
 
-  <a href="dashboard.php" class="btn" style="margin-top:15px;">Takaisin dashboardille</a>
+  <a href="dashboard.php" class="btn back-btn">Takaisin dashboardille</a>
 </main>
 </body>
 </html>

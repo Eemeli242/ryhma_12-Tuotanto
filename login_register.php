@@ -4,20 +4,25 @@ require 'config.php';
 
 $message = '';
 $view = $_GET['view'] ?? 'login';
+$maxFileSize = 2 * 1024 * 1024; // 2MB
 
 // LOGIN
 if ($view === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username=?");
-    $stmt->execute([$_POST['username']]);
-    $user = $stmt->fetch();
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    if ($user && password_verify($_POST['password'], $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        header("Location: add_cabin.php");
-        exit;
-    } else {
-        $message = "Virheellinen käyttäjätunnus tai salasana";
+    if ($username && $password) {
+        $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username=?");
+        $stmt->execute([$username]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            header("Location: add_cabin.php");
+            exit;
+        }
     }
+    $message = "Virheellinen käyttäjätunnus tai salasana";
 }
 
 // REGISTER
@@ -29,57 +34,66 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm_password = $_POST['confirm_password'] ?? '';
     $profile_image = null;
 
-    if ($username && $email && $phone && $password_raw && $confirm_password) {
-        if ($password_raw !== $confirm_password) {
-            $message = "Salasanat eivät täsmää.";
-        } else {
-            // Profiilikuva
-            if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
-                $fileTmp = $_FILES['profile_image']['tmp_name'];
-                $fileName = basename($_FILES['profile_image']['name']);
-                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                $allowed = ['jpg','jpeg','png','gif'];
+    if (!$username || !$email || !$phone || !$password_raw || !$confirm_password) {
+        $message = "Täytä kaikki kentät.";
+    } 
+    // Käyttäjänimi: vain kirjaimia
+    elseif (!preg_match('/^[a-zA-Z]+$/', $username)) {
+        $message = "Käyttäjänimi voi sisältää vain kirjaimia (A-Z, a-z).";
+    } 
+    // Puhelinnumero: vain numerot
+    elseif (!preg_match('/^[0-9]+$/', $phone)) {
+        $message = "Puhelinnumero voi sisältää vain numeroita.";
+    } 
+    // Salasanan pituus
+    elseif (strlen($password_raw) < 8) {
+        $message = "Salasanan tulee olla vähintään 8 merkkiä pitkä.";
+    } 
+    // Salasanat täsmäävät
+    elseif ($password_raw !== $confirm_password) {
+        $message = "Salasanat eivät täsmää.";
+    } 
+    else {
+        // Profiilikuva-käsittely säilyy ennallaan
+        if (!empty($_FILES['profile_image']['tmp_name']) && $_FILES['profile_image']['error'] === 0) {
+            $fileTmp = $_FILES['profile_image']['tmp_name'];
+            $fileName = preg_replace("/[^a-zA-Z0-9_\.-]/", "_", basename($_FILES['profile_image']['name']));
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $allowed = ['jpg','jpeg','png','gif'];
 
-                $check = getimagesize($fileTmp);
-                if ($check === false) {
-                    $message = "Valittu tiedosto ei ole kuva.";
-                } elseif (!in_array($fileExt, $allowed)) {
-                    $message = "Sallitut kuvatyypit: JPG, PNG, GIF.";
+            if (!in_array($fileExt, $allowed)) {
+                $message = "Sallitut kuvatyypit: JPG, PNG, GIF.";
+            } elseif (filesize($fileTmp) > $maxFileSize) {
+                $message = "Kuvan koko saa olla enintään 2MB.";
+            } elseif (getimagesize($fileTmp) === false) {
+                $message = "Valittu tiedosto ei ole kuva.";
+            } else {
+                $targetDir = "uploads/";
+                if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+                $targetFile = $targetDir . time() . "_" . $fileName;
+                if (!move_uploaded_file($fileTmp, $targetFile)) {
+                    $message = "Kuvan tallennus epäonnistui.";
                 } else {
-                    $targetDir = "uploads/";
-                    if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
-                    $targetFile = $targetDir . time() . "_" . $fileName;
-                    if (move_uploaded_file($fileTmp, $targetFile)) {
-                        $profile_image = $targetFile;
-                    } else {
-                        $message = "Kuvan tallennus epäonnistui.";
-                    }
-                }
-            }
-
-            if (!$message) {
-                $password = password_hash($password_raw, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (username, email, phone, password, profile_image) VALUES (?, ?, ?, ?, ?)");
-                try {
-                    $stmt->execute([$username, $email, $phone, $password, $profile_image]);
-
-                    // Automaattinen kirjautuminen
-                    $user_id = $pdo->lastInsertId();
-                    $_SESSION['user_id'] = $user_id;
-
-                    // Ohjataan suoraan add_cabin.php
-                    header("Location: add_cabin.php");
-                    exit;
-
-                } catch (PDOException $e) {
-                    $message = "Virhe: käyttäjänimi, sähköposti tai puhelin on jo käytössä.";
+                    $profile_image = $targetFile;
                 }
             }
         }
-    } else {
-        $message = "Täytä kaikki kentät.";
+
+        if (!$message) {
+            $password = password_hash($password_raw, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("INSERT INTO users (username, email, phone, password, profile_image) VALUES (?, ?, ?, ?, ?)");
+            try {
+                $stmt->execute([$username, $email, $phone, $password, $profile_image]);
+                $_SESSION['user_id'] = $pdo->lastInsertId();
+                header("Location: add_cabin.php");
+                exit;
+            } catch (PDOException $e) {
+                $message = "Virhe: käyttäjänimi, sähköposti tai puhelin on jo käytössä.";
+            }
+        }
     }
 }
+
 ?>
 <!doctype html>
 <html lang="fi">

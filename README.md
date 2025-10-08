@@ -109,7 +109,7 @@ Jos kaikki on oikein, etusivu latautuu ja voit rekisteröityä/kirjautua sisää
 
 ## Käyttöohjeet
 - **Rekisteröityminen / kirjautuminen:** Luo tili tai kirjaudu sisään
-- **Mökkien lisääminen:** Käytä `uusi_mokki.php`-sivua lisätäksesi mökki vuokrattavaksi
+- **Mökkien lisääminen:** Käytä `add_cabin.php`-sivua lisätäksesi mökki vuokrattavaksi
 - **Profiilin muokkaus:** Päivitä sähköpostisi ja profiilikuvasi `edit_profile.php`-sivulla
 - **Dashboard:** Näe omat mökit ja niiden varaukset `dashboard.php`-sivulla
 
