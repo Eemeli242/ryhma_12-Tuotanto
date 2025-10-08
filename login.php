@@ -42,13 +42,13 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $fileTmp = $_FILES['profile_image']['tmp_name'];
                 $fileName = preg_replace("/[^a-zA-Z0-9_\.-]/", "_", basename($_FILES['profile_image']['name']));
                 $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                $allowed = ['jpg','jpeg','png','gif'];
+                $allowed = ['jpg','jpeg','png'];
 
                 $check = getimagesize($fileTmp);
                 if ($check === false) {
-                    $message = "Valittu tiedosto ei ole kuva.";
+                    $message = "Kuva ei ole oikeassa muodossa";
                 } elseif (!in_array($fileExt, $allowed)) {
-                    $message = "Sallitut kuvatyypit: JPG, PNG, GIF.";
+                    $message = "Sallitut kuvatyypit: JPG, PNG";
                 } else {
                     $targetDir = "uploads/";
                     if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
@@ -70,7 +70,7 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     header("Location: add_cabin.php");
                     exit;
                 } catch (PDOException $e) {
-                    $message = "Virhe: käyttäjänimi, sähköposti tai puhelin on jo käytössä.";
+                    $message = "Virhe: käyttäjätunnus tai sähköposti on jo käytössä.";
                 }
             }
         }

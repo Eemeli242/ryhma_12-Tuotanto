@@ -3,7 +3,7 @@ require 'config.php';
 include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_register.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -30,13 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileTmp = $_FILES["image"]["tmp_name"];
         $fileName = basename($_FILES["image"]["name"]);
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $allowed = ['jpg','jpeg','png','gif'];
+        $allowed = ['jpg','jpeg','png'];
 
         $check = getimagesize($fileTmp);
         if ($check === false) {
             $message = "Tiedosto ei ole kuva.";
         } elseif (!in_array($fileExt, $allowed)) {
-            $message = "Vain JPG, PNG ja GIF kuvat sallittu.";
+            $message = "Vain JPG, ja PNG kuvat sallittu.";
         } else {
             $targetDir = "uploads/";
             if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);

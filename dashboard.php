@@ -1,19 +1,14 @@
 <?php
 require 'config.php';
 include 'header.php';
-
-// Tarkista kirjautuminen
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login_register.php');
+    header('Location: login.php');
     exit;
 }
-
-// Hae käyttäjän tiedot
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
-// Hae käyttäjän mökit
 $stmt = $pdo->prepare("
     SELECT c.*, COUNT(b.id) AS booking_count
     FROM cabins c
@@ -24,7 +19,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([$_SESSION['user_id']]);
 $cabins = $stmt->fetchAll();
 
-// Hae arvostelujen keskiarvot jokaiselle mökille
 $reviewStmt = $pdo->prepare("SELECT AVG(rating) AS avg_rating, COUNT(*) AS review_count FROM reviews WHERE cabin_id = ?");
 foreach ($cabins as &$cabin) {
     $reviewStmt->execute([$cabin['id']]);
@@ -33,8 +27,6 @@ foreach ($cabins as &$cabin) {
     $cabin['review_count'] = $stats['review_count'] ?? 0;
 }
 unset($cabin);
-
-// Hae viimeisimmät varaukset (omien mökkien varaukset)
 $stmt = $pdo->prepare("
     SELECT b.*, c.name AS cabin_name
     FROM bookings b
@@ -45,15 +37,11 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$_SESSION['user_id']]);
 $bookings = $stmt->fetchAll();
-
-// Hae suosituin mökki (eniten varauksia)
 $top_cabin = null;
 if ($cabins) {
     usort($cabins, fn($a,$b) => $b['booking_count'] - $a['booking_count']);
     $top_cabin = $cabins[0];
 }
-
-// Hae käyttäjän omat varaukset
 $stmt = $pdo->prepare("
     SELECT b.*, c.name AS cabin_name
     FROM bookings b
@@ -79,8 +67,6 @@ $my_bookings = $stmt->fetchAll();
 </head>
 <body>
 <main class="container dashboard-grid">
-
-<!-- Profiili -->
 <section class="dashboard-section">
     <h2>Profiili</h2>
     <div class="profile-section">
@@ -95,8 +81,6 @@ $my_bookings = $stmt->fetchAll();
     <a href="edit_profile.php" class="btn">Muokkaa profiilia</a>
     <a href="/admin/index.php" class="btn">Admin paneeli</a>
 </section>
-
-<!-- Omat mökit -->
 <section class="dashboard-section">
     <h2>Omat mökit</h2>
 
@@ -145,8 +129,6 @@ $my_bookings = $stmt->fetchAll();
     <?php endif; ?>
     <a href="add_cabin.php" class="btn">Lisää uusi mökki</a>
 </section>
-
-<!-- Viimeisimmät varaukset -->
 <section class="dashboard-section">
     <h2>Viimeisimmät varaukset</h2>
     <?php if ($bookings): ?>
@@ -176,8 +158,6 @@ $my_bookings = $stmt->fetchAll();
         <p>Ei uusia varauksia.</p>
     <?php endif; ?>
 </section>
-
-<!-- Omien varattujen mökkien lista -->
 <section class="dashboard-section">
     <h2>Omat varatut mökit</h2>
     <?php if ($my_bookings): ?>

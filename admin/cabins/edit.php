@@ -28,13 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileTmp = $_FILES["image"]["tmp_name"];
         $fileName = basename($_FILES["image"]["name"]);
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $allowed = ['jpg','jpeg','png','gif'];
+        $allowed = ['jpg','jpeg','png'];
 
         $check = getimagesize($fileTmp);
         if ($check === false) {
             $message = "Tiedosto ei ole kuva.";
         } elseif (!in_array($fileExt, $allowed)) {
-            $message = "Vain JPG, PNG ja GIF kuvat sallittu.";
+            $message = "Vain JPG ja PNG kuvat sallittu.";
         } else {
             $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/";
             $uniqueName = time() . "_" . $fileName;

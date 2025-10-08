@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/header.php';
 
-// Basic filtering
 $where = '1=1';
 $params = [];
 if (!empty($_GET['status'])) {

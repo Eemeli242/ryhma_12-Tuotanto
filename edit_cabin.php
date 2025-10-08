@@ -3,14 +3,19 @@ require 'config.php';
 include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_register.php");
+    header("Location: login.php");
     exit;
 }
-
+$locations = [
+    'Helsinki','Espoo','Tampere','Vantaa','Oulu','Turku',
+    'Jyväskylä','Lahti','Kuopio','Pori','Lappeenranta','Vaasa',
+    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola',
+    'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
+    'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
+];
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) die('Mökkiä ei löytynyt.');
 
-// Hae mökki ja tarkista omistajuus (vain tarvittavat sarakkeet)
 $stmt = $pdo->prepare("SELECT id, name, description, price_per_night, max_guests, location, image FROM cabins WHERE id = ? AND owner_id = ?");
 $stmt->execute([$id, $_SESSION['user_id']]);
 $cabin = $stmt->fetch();
@@ -26,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location = trim($_POST['location']);
     $image = $cabin['image'];
 
-    // Käsittele kuvan upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $targetDir = "uploads/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
@@ -34,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileTmp  = $_FILES["image"]["tmp_name"];
         $fileName = basename($_FILES["image"]["name"]);
         $fileExt  = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $allowed  = ['jpg','jpeg','png','gif'];
+        $allowed  = ['jpg','jpeg','png'];
 
         $check = getimagesize($fileTmp);
         if($check !== false && in_array($fileExt, $allowed)) {
@@ -45,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "Kuvan lataus epäonnistui.";
             }
         } else {
-            $message = "Vain JPG, JPEG, PNG ja GIF kuvat sallittu.";
+            $message = "Vain JPG, JPEG, ja PNG kuvat sallittu.";
         }
     }
 
@@ -56,8 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE id = ? AND owner_id = ?
         ");
         $stmt->execute([$name, $description, $price, $maxGuests, $image, $location, $id, $_SESSION['user_id']]);
-        $message = "Mökki päivitetty!";
-        // Päivitä esikatselu
+        $message = "Päivitetty!";
         $cabin = array_merge($cabin, [
             'name'=>$name,
             'description'=>$description,
@@ -69,14 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Lista Suomen kaupungeista
-$locations = [
-    'Helsinki','Espoo','Tampere','Vantaa','Oulu','Turku',
-    'Jyväskylä','Lahti','Kuopio','Pori','Lappeenranta','Vaasa',
-    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola',
-    'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
-    'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
-];
 ?>
 <!doctype html>
 <html lang="fi">

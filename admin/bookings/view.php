@@ -6,7 +6,6 @@ $stmt->execute(['id'=>$id]);
 $b = $stmt->fetch();
 if (!$b) { echo '<div class="alert alert-danger">Varausta ei löydy.</div>'; require_once __DIR__ . '/../includes/footer.php'; exit; }
 
-// change status form
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['status'])) {
     $s = $_POST['status'];
     $stmt = $pdo->prepare('UPDATE bookings SET status = :s WHERE id = :id');

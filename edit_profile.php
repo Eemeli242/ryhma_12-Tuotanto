@@ -3,13 +3,12 @@ require 'config.php';
 include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_register.php");
+    header("Location: login.php");
     exit;
 }
 
 $message = '';
 
-// Hae käyttäjän tiedot (vain tarvittavat sarakkeet)
 $stmt = $pdo->prepare("SELECT username, email, phone, profile_image, password FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
@@ -21,24 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone']);
     $profileImage = $user['profile_image'] ?? null;
 
-    // Tarkista salasana
     if (!password_verify($currentPassword, $user['password'])) {
         $message = "Nykyinen salasana on väärin. Profiilia ei päivitetty.";
     } 
-    // Käyttäjänimi vain kirjaimia ja alaviiva
     elseif (!preg_match('/^[a-zA-Z_]+$/', $username)) {
         $message = "Käyttäjänimi voi sisältää vain kirjaimia ja alaviivan (_).";
     } 
-    // Puhelin vain numeroita
     elseif (!preg_match('/^[0-9]+$/', $phone)) {
         $message = "Puhelinnumero voi sisältää vain numeroita.";
     } 
-    // Sähköposti validi
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Sähköposti ei ole validi.";
     } 
     else {
-        // Profiilikuvan käsittely
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
             $targetDir = "uploads/";
             if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
@@ -63,14 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Päivitä tiedot tietokantaan vain jos ei virheitä
         if (!$message) {
             $stmt = $pdo->prepare("
                 UPDATE users SET username = ?, email = ?, phone = ?, profile_image = ? WHERE id = ?
             ");
             $stmt->execute([$username, $email, $phone, $profileImage, $_SESSION['user_id']]);
             
-            // Päivitys onnistui → ohjataan dashboardille
             header("Location: dashboard.php");
             exit;
         }

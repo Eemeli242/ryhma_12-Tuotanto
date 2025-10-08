@@ -1,7 +1,6 @@
 <?php
 if (!session_id()) session_start();
 require_once __DIR__ . '/../../config.php';
-// ensure user is admin
 if (empty($_SESSION['user']) || ($_SESSION['user']['role'] ?? '') !== 'admin') {
     header('Location: /admin/auth/login.php');
     exit;

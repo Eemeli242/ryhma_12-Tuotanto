@@ -4,7 +4,7 @@ include 'header.php';
 if (session_status() == PHP_SESSION_NONE) session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login_register.php');
+    header('Location: login.php');
     exit;
 }
 
@@ -48,13 +48,10 @@ $review_count = $stats['review_count'] ?? 0;
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
-    /* Lisää väliä napin ja kuvan väliin */
 .back-btn {
-    display: table; /* varmistaa, että margin toimii */
-    margin-bottom: 20px;   /* vaihda arvo halutuksi */
+    display: table;
+    margin-bottom: 20px; 
 }
-
-/* Halutessasi voit myös lisätä hieman tilaa kuvan ympärille */
 .cabin-card img {
     display: block;
     margin-top: 10px;
