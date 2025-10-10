@@ -10,9 +10,6 @@ if (!$id) {
 $stmt = $pdo->prepare('SELECT b.*, c.name as cabin_name FROM bookings b JOIN cabins c ON b.cabin_id = c.id WHERE b.id = ?');
 $stmt->execute([$id]);
 $booking = $stmt->fetch();
-if (!$booking) {
-    die('Varausta ei löytynyt.');
-}
 ?>
 <!doctype html>
 <html lang="fi">
@@ -33,6 +30,5 @@ if (!$booking) {
     <a href="index.php">Takaisin mökkilistaukseen</a>
   </div>
 </main>
-
 </html>
 <?php include 'footer.php'; ?>

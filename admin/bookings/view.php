@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 $id = intval($_GET['id'] ?? 0);
 $stmt = $pdo->prepare('SELECT b.*, c.name AS cabin_name FROM bookings b JOIN cabins c ON b.cabin_id = c.id WHERE b.id = :id');
 $stmt->execute(['id'=>$id]);
@@ -35,4 +35,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['status'])) {
   <a class="btn btn-secondary" href="list.php">Takaisin</a>
 </form>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 
 $message = '';
 
@@ -94,4 +94,3 @@ if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
   <a class="btn btn-secondary" href="list.php">Peruuta</a>
 </form>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

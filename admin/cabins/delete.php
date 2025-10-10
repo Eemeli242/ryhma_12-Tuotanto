@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 $id = intval($_GET['id'] ?? 0);
 if ($id) {
     $stmt = $pdo->prepare('DELETE FROM cabins WHERE id = :id');

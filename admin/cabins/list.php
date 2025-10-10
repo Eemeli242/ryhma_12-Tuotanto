@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 
 // Fetch cabins
 $stmt = $pdo->query('SELECT * FROM cabins ORDER BY id DESC');
@@ -27,4 +27,3 @@ $cabins = $stmt->fetchAll();
 </tbody>
 </table>
 </div>
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

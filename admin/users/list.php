@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
-
+require '../includes/header.php';
 $stmt = $pdo->query('SELECT id, username, email, phone, role, created_at FROM users ORDER BY id DESC');
 $users = $stmt->fetchAll();
 ?>
@@ -27,4 +26,3 @@ $users = $stmt->fetchAll();
 </tbody>
 </table>
 </div>
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

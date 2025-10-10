@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 
 $where = '1=1';
 $params = [];
@@ -41,4 +41,3 @@ $rows = $stmt->fetchAll();
 </tbody>
 </table>
 </div>
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

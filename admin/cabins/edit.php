@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 $id = intval($_GET['id'] ?? 0);
 
 $stmt = $pdo->prepare('SELECT * FROM cabins WHERE id = :id');
@@ -121,4 +121,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <a class="btn btn-secondary" href="list.php">Peruuta</a>
 </form>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

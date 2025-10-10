@@ -5,7 +5,6 @@ require 'config.php';
 $message = '';
 $view = $_GET['view'] ?? 'login';
 
-// LOGIN
 if ($view === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -24,48 +23,44 @@ if ($view === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = "Virheellinen käyttäjätunnus tai salasana";
 }
 
-// REGISTER
 if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
-    $password_raw = $_POST['password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
+    $password1 = $_POST['password'] ?? '';
+    $password2 = $_POST['confirm_password'] ?? '';
     $profile_image = null;
 
-    if ($username && $email && $phone && $password_raw && $confirm_password) {
-        if ($password_raw !== $confirm_password) {
+    if ($username && $email && $phone && $password1 && $password2) {
+        if ($password1 !== $password2) {
             $message = "Salasanat eivät täsmää.";
         } else {
             // Profiilikuva
-            if (!empty($_FILES['profile_image']['tmp_name']) && $_FILES['profile_image']['error'] === 0) {
-                $fileTmp = $_FILES['profile_image']['tmp_name'];
-                $fileName = preg_replace("/[^a-zA-Z0-9_\.-]/", "_", basename($_FILES['profile_image']['name']));
-                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                $allowed = ['jpg','jpeg','png'];
+if (!empty($_FILES['profile_image']['tmp_name']) && $_FILES['profile_image']['error'] === 0) {
+    $fileTmp = $_FILES['profile_image']['tmp_name'];
+    $fileExt = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
+    $allowed = ['jpg','jpeg','png'];
 
-                $check = getimagesize($fileTmp);
-                if ($check === false) {
-                    $message = "Kuva ei ole oikeassa muodossa";
-                } elseif (!in_array($fileExt, $allowed)) {
-                    $message = "Sallitut kuvatyypit: JPG, PNG";
-                } else {
-                    $targetDir = "uploads/";
-                    if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
-                    $targetFile = $targetDir . time() . "_" . $fileName;
-                    if (!move_uploaded_file($fileTmp, $targetFile)) {
-                        $message = "Kuvan tallennus epäonnistui.";
-                    } else {
-                        $profile_image = $targetFile;
-                    }
-                }
-            }
+    if (getimagesize($fileTmp) === false || !in_array($fileExt, $allowed)) {
+        $message = "Kuva ei ole oikeassa muodossa tai tyyppi ei ole sallittu (JPG/PNG).";
+    } else {
+        $targetDir = "uploads/";
+        if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+        $profile_image = $targetDir . time() . '_' . uniqid() . '.' . $fileExt;
+        if (!move_uploaded_file($fileTmp, $profile_image)) {
+            $message = "Kuvan tallennus epäonnistui.";
+        }
+    }
+}
+if (!$profile_image) {
+    $profile_image = 'images/avatar.jpg'; // polku tiettyyn oletuskuvaan
+}
 
             if (!$message) {
-                $password = password_hash($password_raw, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (username, email, phone, password, profile_image) VALUES (?, ?, ?, ?, ?)");
+                $password = password_hash($password1, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO users (username,email,phone,password,profile_image) VALUES (?,?,?,?,?)");
                 try {
-                    $stmt->execute([$username, $email, $phone, $password, $profile_image]);
+                    $stmt->execute([$username,$email,$phone,$password,$profile_image]);
                     $_SESSION['user_id'] = $pdo->lastInsertId();
                     header("Location: add_cabin.php");
                     exit;
@@ -79,6 +74,7 @@ if ($view === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 <!doctype html>
 <html lang="fi">
 <head>

@@ -9,11 +9,36 @@ if (!isset($_SESSION['user_id'])) {
 
 $message = '';
 $locations = [
-    'Helsinki','Espoo','Tampere','Vantaa','Oulu','Turku',
-    'Jyväskylä','Lahti','Kuopio','Pori','Lappeenranta','Vaasa',
-    'Seinäjoki','Rovaniemi','Kotka','Joensuu','Hämeenlinna','Kouvola',
-    'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
-    'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
+  "Helsinki",
+  "Espoo",
+  "Tampere",
+  "Vantaa",
+  "Oulu",
+  "Turku",
+  "Jyväskylä",
+  "Lahti",
+  "Kuopio",
+  "Pori",
+  "Lappeenranta",
+  "Vaasa",
+  "Seinäjoki",
+  "Rovaniemi",
+  "Kotka",
+  "Joensuu",
+  "Hämeenlinna",
+  "Kouvola",
+  "Salo",
+  "Mikkeli",
+  "Hyvinkää",
+  "Nokia",
+  "Kajaani",
+  "Savonlinna",
+  "Riihimäki",
+  "Kerava",
+  "Kemi",
+  "Kokkola",
+  "Loimaa",
+  "Raisio"
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

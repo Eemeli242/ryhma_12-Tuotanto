@@ -9,8 +9,7 @@ $maxPrice  = (float)($_GET['max_price'] ?? 0);
 $startDate = $_GET['start_date'] ?? '';
 $endDate   = $_GET['end_date'] ?? '';
 
-$locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location')
-                 ->fetchAll(PDO::FETCH_COLUMN);
+$locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location')->fetchAll(PDO::FETCH_COLUMN);
 
 $sql = "SELECT * FROM cabins WHERE 1=1";
 $params = [];
@@ -36,8 +35,7 @@ $stmt->execute($params);
 $cabins = $stmt->fetchAll();
 
 /* Kaikki varaukset kalenteriin */
-$bookings = $pdo->query("SELECT start_date, end_date FROM bookings")
-                ->fetchAll(PDO::FETCH_ASSOC);
+$bookings = $pdo->query("SELECT start_date, end_date FROM bookings")->fetchAll(PDO::FETCH_ASSOC);
 $disabledDates = [];
 foreach ($bookings as $b) {
 }
@@ -97,7 +95,7 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?php if ($topCabins): ?>
 <section style="margin:40px 0;">
-  <h2>Eniten varatut lomamökit – 4 parasta</h2>
+ <h1 style="text-align: center;">Eniten varatut lomamökit</h1>
   <div class="grid">
     <?php foreach ($topCabins as $c): ?>
       <article class="card top-card">
@@ -106,7 +104,6 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
         <h3><?=htmlspecialchars($c['name'])?></h3>
         <p class="description"><?= nl2br(htmlspecialchars($c['description'])) ?></p>
-
         <div class="info-row">
           <span class="label">Hinta / yö:</span>
           <span class="value">€<?=number_format($c['price_per_night'],2)?></span>
@@ -138,7 +135,6 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC);
             </span>
             (<?=$review_count?> arvostelua)
         </p>
-
         <a href="cabins.php?id=<?=urlencode($c['id'])?>" class="btn">Varaa nyt</a>
       </article>
     <?php endforeach; ?>
@@ -147,7 +143,7 @@ $topCabins = $topCabinsStmt->fetchAll(PDO::FETCH_ASSOC);
 <?php endif; ?>
 
 <section>
-  <h2>Kaikki mökit</h2>
+ <h1 style="text-align: center;">Kaikki mökit</h1>
   <div class="grid">
     <?php foreach ($cabins as $c): ?>
       <article class="card">

@@ -1,14 +1,17 @@
 <?php
 require 'config.php';
-include 'header.php';
+require 'header.php';
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+
+// --- Hae käyttäjän tiedot ---
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
+// --- Hae mökit ja varausmäärät ---
 $stmt = $pdo->prepare("
     SELECT c.*, COUNT(b.id) AS booking_count
     FROM cabins c
@@ -19,14 +22,28 @@ $stmt = $pdo->prepare("
 $stmt->execute([$_SESSION['user_id']]);
 $cabins = $stmt->fetchAll();
 
-$reviewStmt = $pdo->prepare("SELECT AVG(rating) AS avg_rating, COUNT(*) AS review_count FROM reviews WHERE cabin_id = ?");
+// --- Hae arvostelut yhdellä kyselyllä ---
+$reviews = $pdo->query("
+    SELECT cabin_id, AVG(rating) AS avg_rating, COUNT(*) AS review_count
+    FROM reviews
+    GROUP BY cabin_id
+")->fetchAll(PDO::FETCH_UNIQUE);
+
+// Lisää arvostelut mökkitaulukkoon
 foreach ($cabins as &$cabin) {
-    $reviewStmt->execute([$cabin['id']]);
-    $stats = $reviewStmt->fetch();
-    $cabin['avg_rating'] = $stats['avg_rating'] ?? 0;
-    $cabin['review_count'] = $stats['review_count'] ?? 0;
+    $cabin['avg_rating']   = $reviews[$cabin['id']]['avg_rating'] ?? 0;
+    $cabin['review_count'] = $reviews[$cabin['id']]['review_count'] ?? 0;
 }
 unset($cabin);
+
+// --- Hae top-mökki ---
+$top_cabin = null;
+if ($cabins) {
+    usort($cabins, fn($a, $b) => $b['booking_count'] <=> $a['booking_count']);
+    $top_cabin = $cabins[0];
+}
+
+// --- Hae viimeisimmät varaukset omille mökeille ---
 $stmt = $pdo->prepare("
     SELECT b.*, c.name AS cabin_name
     FROM bookings b
@@ -37,11 +54,8 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$_SESSION['user_id']]);
 $bookings = $stmt->fetchAll();
-$top_cabin = null;
-if ($cabins) {
-    usort($cabins, fn($a,$b) => $b['booking_count'] - $a['booking_count']);
-    $top_cabin = $cabins[0];
-}
+
+// --- Hae käyttäjän omat varaukset ---
 $stmt = $pdo->prepare("
     SELECT b.*, c.name AS cabin_name
     FROM bookings b
@@ -191,5 +205,6 @@ $my_bookings = $stmt->fetchAll();
 </section>
 
 </main>
+<?php include 'footer.php'; ?>
 </body>
 </html>

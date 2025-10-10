@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2025 at 11:04 AM
+-- Generation Time: Oct 10, 2025 at 12:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,20 +48,14 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `customer_id`, `cabin_id`, `customer_name`, `customer_email`, `start_date`, `end_date`, `guests`, `created_at`, `paid`, `status`, `user_id`, `admin_id`) VALUES
-(9, NULL, 1, 'Eemeli Määttä', 'maatta.eemeli@sähköposti.fi', '2025-09-15', '2025-09-27', 1, '2025-09-15 15:24:30', 1440.00, 'paid', NULL, NULL),
-(10, NULL, 3, 'Eemeli Määttä', 'dawdwad@gmail.com', '2025-09-15', '2025-09-27', 2, '2025-09-15 15:29:34', 1800.00, 'paid', NULL, NULL),
-(11, NULL, 6, 'Eemeli Määttä', 'maatta.eemeli@sähköposti.fi', '2025-09-15', '2025-09-20', 1, '2025-09-15 15:29:52', 500.00, 'paid', NULL, NULL),
-(13, NULL, 4, 'Eemeli Määttä', 'maatta.eemeli@sähköposti.fi', '2025-09-15', '2025-09-16', 1, '2025-09-15 15:34:27', 200.00, 'paid', NULL, NULL),
-(14, NULL, 4, 'Eemeli Määttä', 'dawdwad@gmail.com', '2025-09-21', '2025-09-22', 1, '2025-09-15 15:34:45', 200.00, 'paid', NULL, NULL),
-(17, NULL, 1, 'awdwad wad', 'eemeli@gmail.com1', '2026-02-12', '2026-07-23', 1, '2025-09-26 12:22:23', 19320.00, 'paid', 1, NULL),
-(18, NULL, 4, 'Eemeli Määttä', 'eemeli@gmail.com1', '2026-02-04', '2026-06-04', 1, '2025-09-26 12:22:49', 24000.00, 'paid', 1, NULL),
-(19, 1, 3, 'Eemeli Määttä', 'eemeli@gmail.com1', '2026-02-07', '2026-07-11', 1, '2025-09-26 12:24:38', 23100.00, 'paid', NULL, NULL),
-(20, 1, 15, 'Eemeli Määttä', 'eemeli@gmail.com1', '2026-02-01', '2026-07-01', 1, '2025-09-26 12:25:31', 16650.00, 'paid', NULL, NULL),
-(21, 1, 6, 'Eemeli Määttä', 'dawdwad@gmail.com', '2025-09-24', '2025-09-25', 1, '2025-09-26 13:54:00', 100.00, 'paid', NULL, NULL),
-(22, 1, 22, 'Eemeli Määttä', 'eemeli@gmail.com1', '2025-10-06', '2025-10-11', 1, '2025-10-06 15:46:29', 55.00, 'paid', NULL, NULL),
-(23, 1, 22, 'Eemeli Määttä', 'dawdwad@gmail.com', '2025-10-19', '2025-10-31', 2, '2025-10-06 15:46:54', 132.00, 'paid', NULL, NULL),
-(24, 1, 22, 'awdwad wad', 'dawdwad@gmail.com', '2026-01-01', '2026-03-06', 1, '2025-10-06 15:47:23', 704.00, 'cancelled', NULL, NULL),
-(25, 1, 1, 'wae', 'maatta.eemeli@sähköposti.fi', '2025-10-06', '2025-10-29', 1, '2025-10-06 15:59:26', 2760.00, 'pending', NULL, NULL);
+(26, 14, 1, 'Samu', 'samumail@gmail.com', '2025-10-10', '2025-10-18', 1, '2025-10-10 10:15:51', 960.00, 'paid', NULL, NULL),
+(27, 14, 15, 'Samu', 'samumail@gmail.com', '2025-10-10', '2025-10-21', 1, '2025-10-10 10:16:02', 1221.00, 'paid', NULL, NULL),
+(28, 14, 22, 'Samu', 'samumail@gmail.com', '2025-10-12', '2025-10-23', 5, '2025-10-10 10:16:19', 121.00, 'paid', NULL, NULL),
+(29, 16, 1, 'Topi', 'topimail@gmail.com', '2025-11-01', '2025-11-08', 1, '2025-10-10 10:17:57', 840.00, 'paid', NULL, NULL),
+(30, 16, 3, 'Topi', 'topimail@gmail.com', '2025-11-13', '2025-11-28', 2, '2025-10-10 10:18:14', 2250.00, 'paid', NULL, NULL),
+(31, 16, 6, 'Topi', 'topimail@gmail.com', '2025-10-10', '2025-10-31', 1, '2025-10-10 10:18:37', 2100.00, 'paid', NULL, NULL),
+(32, 1, 3, 'Eemeli Määttä', 'eemelimail@gmail.com', '2025-10-10', '2025-10-31', 1, '2025-10-10 10:20:39', 3150.00, 'paid', NULL, NULL),
+(33, 1, 5, 'Eemeli Määttä', 'eemelimail@gmail.com', '2025-10-10', '2025-10-31', 1, '2025-10-10 10:21:17', 2730.00, 'paid', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -87,16 +81,15 @@ CREATE TABLE `cabins` (
 --
 
 INSERT INTO `cabins` (`id`, `owner_id`, `name`, `description`, `price_per_night`, `max_guests`, `image`, `location`, `user_id`, `availability`) VALUES
-(1, 0, 'Mäntymetsän Kallio', 'Mäntymetsän Kallio – Korkealla kallion laella seisova mökki, jota ympäröivät vanhat, tuoksuvat männyt.', 120.00, 4, 'images/cabin1.jpg', 'Helsinki', NULL, 1),
+(1, 0, 'Mäntymetsän Kallio', 'Mäntymetsän Kallio – Korkealla kallion laella seisova mökki, jota ympäröivät vanhat, tuoksuvat männyt.', 120.00, 4, '/uploads/1760091206_0529d9df-huvila_peippi_37_1.jpg', 'Helsinki', NULL, 1),
 (2, 0, 'Kuunsilta', 'Kuunsilta – Rauhallinen rantamökki, jossa kuu heijastuu iltaisin veteen luoden hopeisen “sillan” laiturilta horisonttiin.', 180.00, 6, 'images/cabin2.jpg', 'Turku', NULL, 1),
 (3, 0, 'Tuulensuo', 'Tuulensuo – Metsän keskellä sijaitseva suojaisa paikka, jossa tuulen humina kuuluu kaukaa mutta piha pysyy tyynenä.', 150.00, 5, 'images/cabin3.jpg', 'Lahti', NULL, 1),
-(4, 0, 'Siniranta', 'Siniranta – Kirkasvetisen järven rannalla, jossa vesi heijastaa taivaan syvänsinisen sävyn kesäpäivinä.adaadadddd', 200.00, 6, 'images/cabin4.jpg', 'Jyväskylä', NULL, 1),
-(5, 0, 'Karhunpesä', 'Karhunpesä – Vankka ja lämmin hirsimökki, joka huokuu erämaan voimaa ja kutsuu talvi-iltoina takkatulen äärelle.', 130.00, 2, 'images/cabin5.jpg', 'Turku', NULL, 1),
-(6, 0, 'Lumilinna', 'Lumilinna – Talven taikaa rakastavalle: mökki, joka peittyy kauniiseen lumipeitteeseen ja loistaa kynttilälyhtyjen valossa.', 100.00, 1, 'images/cabin6.jpg', 'Jyväskylä', 1, 1),
-(14, 1, 'Kesäheinä', 'Kesäheinä – Avoimella niityllä sijaitseva mökki, jonka ympärillä tuoksuvat luonnonkukat ja heinäladot.', 11.00, 11, 'images/cabin7.jpg', 'Hämeenlinna', NULL, 1),
-(15, 1, 'Kallioranta', 'Kallioranta – Jyrkän kalliorannan päällä lepäävä paikka, josta voi hypätä suoraan kirkkaaseen veteen. Lämmin järvivesi.', 111.00, 1, 'images/cabin8.jpg', 'Hämeenlinna', NULL, 1),
-(16, 1, 'Varjokallio', 'Varjokallio – Jylhä kivikko ja varjoisat puut luovat viileän ja salaperäisen tunnelman kuumimpinakin kesäpäivinä.', 1111.00, 12, 'images/cabin9.jpg', 'Hämeenlinna', NULL, 1),
-(22, 1, 'Kalakukko', 'Villa Kalakukko on tunnelmallinen ja modernisti varusteltu hirsimökki, joka sijaitsee rauhallisella paikalla kirkasvetisen järven rannalla. ', 11.00, 11, 'uploads/1759765485_0529d9df-huvila_peippi_37_1.jpg', 'Kuopio', NULL, 1);
+(4, 0, 'Siniranta', 'Siniranta – Kirkasvetisen järven rannalla, jossa vesi heijastaa taivaan syvänsinisen sävyn kesäpäivinä.adaadadddd', 200.00, 6, '/uploads/1760091197_hero-huvilakategoria1-min.jpg', 'Jyväskylä', NULL, 1),
+(5, 0, 'Karhunpesä', 'Karhunpesä – Vankka ja lämmin hirsimökki, joka huokuu erämaan voimaa ja kutsuu talvi-iltoina takkatulen äärelle.', 130.00, 4, 'images/cabin5.jpg', 'Turku', NULL, 1),
+(6, 0, 'Lumilinna', 'Lumilinna – Talven taikaa rakastavalle: mökki, joka peittyy kauniiseen lumipeitteeseen ja loistaa kynttilälyhtyjen valossa.', 100.00, 4, 'images/cabin6.jpg', 'Jyväskylä', 1, 1),
+(14, 1, 'Kesäheinä', 'Kesäheinä – Avoimella niityllä sijaitseva mökki, jonka ympärillä tuoksuvat luonnonkukat ja heinäladot.', 50.00, 11, 'images/cabin7.jpg', 'Hämeenlinna', NULL, 1),
+(15, 1, 'Kallioranta', 'Kallioranta – Jyrkän kalliorannan päällä lepäävä paikka, josta voi hypätä suoraan kirkkaaseen veteen. Lämmin järvivesi.', 111.00, 2, 'images/cabin8.jpg', 'Hämeenlinna', NULL, 1),
+(22, 1, 'Kalakukko', 'Villa Kalakukko on tunnelmallinen ja modernisti varusteltu hirsimökki, joka sijaitsee rauhallisella paikalla kirkasvetisen järven rannalla. ', 11.00, 11, '/uploads/1760091280_Mökki-110-kesäulko-2-scaled-e1588589079801.jpg', 'Kuopio', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -120,14 +113,13 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `booking_id`, `cabin_id`, `user_id`, `rating`, `comment`, `created_at`, `approved`) VALUES
-(16, 25, 1, 1, 5, 'ON HIENO MÖKKI', '2025-10-06 16:00:18', 1),
-(17, 25, 1, 1, 3, 'Hieman likaista', '2025-10-06 16:00:26', 1),
-(18, 25, 1, 1, 5, 'Todella mahtava viikonloppu reissu.', '2025-10-06 16:00:40', 1),
-(19, 23, 22, 1, 2, 'Oli hieman tylsä sisustus', '2025-10-06 16:01:13', 1),
-(20, 23, 22, 1, 4, 'Hyvä mökki 4/5', '2025-10-06 16:01:22', 1),
-(21, 19, 3, 1, 5, 'Paras mökki mitä rahalla saa', '2025-10-06 16:01:36', 1),
-(22, 19, 3, 1, 1, 'Heikko tarjoilu. Autotie oli todella huonossa kunnossa.', '2025-10-06 16:01:51', 1),
-(23, 19, 3, 1, 4, 'Kalastus mahdollisuudet olivat erittäin hyvät. Mutta itse mökki likainen.', '2025-10-06 16:02:03', 1);
+(24, 28, 22, 14, 5, 'Hyvä mökki kalakukko maistuu hyvältä.', '2025-10-10 10:16:38', 1),
+(25, 26, 1, 14, 1, 'Todella likainen sisältä. En voi suositella.', '2025-10-10 10:16:49', 1),
+(26, 27, 15, 14, 4, 'Hyvä mökki Kallionranalla kalastus ei onnistunut.', '2025-10-10 10:17:06', 1),
+(27, 30, 3, 16, 4, 'Hyvä mökki voin suositella.', '2025-10-10 10:19:09', 1),
+(28, 29, 1, 16, 1, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\r\n\r\nHUONO MÖKKI', '2025-10-10 10:19:16', 1),
+(29, 31, 6, 16, 2, 'Siisti mökki mutta kallis', '2025-10-10 10:19:23', 1),
+(30, 32, 3, 1, 5, 'Hieno mökki. En voi muutakuin suositella.', '2025-10-10 10:20:53', 1);
 
 -- --------------------------------------------------------
 
@@ -152,8 +144,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `phone`, `profile_image`, `password`, `created_at`, `balance`, `role`) VALUES
-(1, 'eemeli', 'eemeli@gmail.com11', '040000002', 'uploads/1758465740_1200x630cw-removebg-preview.png', '$2y$10$F0B8XZPqtzZYT6S0.F.B3./MGP3TcsuoM3oG7XAMEjQrJDX06WoaG', '2025-09-15 10:43:23', 255257.00, 'admin'),
-(9, 'Eemeli2', 'awedawf@gmail.com', '949492', NULL, '$2y$10$BBPflEYFmzxkJHYnrWuSG.QSGCiNiC./M2KqU928KcuBCom9eWSqi', '2025-09-26 11:07:07', 999999.00, 'user');
+(1, 'Eemeli', 'eemelimail@gmail.com', '04049027931', 'uploads/1760091145_1200x630cw-removebg-preview.png', '$2y$10$F0B8XZPqtzZYT6S0.F.B3./MGP3TcsuoM3oG7XAMEjQrJDX06WoaG', '2025-09-15 10:43:23', 5462.00, 'admin'),
+(14, 'Samu', 'samumail@gmail.com', '0450002085', 'images/avatar.jpg', '$2y$10$ZpWLP4euK4sySvwiZoGiFuxIsWIWAfIcfJTAE.0tRlnXDyNjd/yZW', '2025-10-10 10:00:53', 698.00, 'user'),
+(15, 'Kim', 'kimmail@gmail.com', '04400295972', 'images/avatar.jpg', '$2y$10$b19bkCTQ2ZtcqU0.Inz7Fe5UCeKl2jyKpe/1c.UTCJBY.YoknoaZe', '2025-10-10 10:01:08', 400.00, 'user'),
+(16, 'Topi', 'topimail@gmail.com', '04003997881', 'images/avatar.jpg', '$2y$10$tAlUi5vKmjZLEAuhSZXWn.EnrBu.v5JG6FLZSso8He.LSrhJw8ORK', '2025-10-10 10:01:40', 14810.00, 'user');
 
 --
 -- Indexes for dumped tables
@@ -200,7 +194,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `cabins`
@@ -212,13 +206,13 @@ ALTER TABLE `cabins`
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables

@@ -3,7 +3,6 @@ session_start();
 require 'config.php';
 
 $user = null;
-$user_balance = 0;
 if (isset($_SESSION['user_id'])) {
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
@@ -26,7 +25,7 @@ if (isset($_SESSION['user_id'])) {
       <?php if ($user): ?>
       <div class="profile-dropdown" style="position:relative;">
         <a href="#" style="display:flex;align-items:center;color:#fff;text-decoration:none;">
-          <img src="<?=htmlspecialchars($user['profile_image'] ?? 'default-avatar.png')?>" alt="Profiili" class="profile-pic" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin-right:8px;">
+          <img src="<?=htmlspecialchars($user['profile_image'] ?? 'default-avatar.png')?>" alt="Profiili" class="profile-pic" style="width:70px;height:70px;border-radius:50%;object-fit:cover;margin-right:8px;">
           <?=htmlspecialchars($user['username'])?>
           <span style="margin-left:8px;font-weight:600;">(Saldo: €<?=number_format($user_balance, 2)?>)</span>
         </a>

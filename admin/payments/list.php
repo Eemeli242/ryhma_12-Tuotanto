@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 
 $stmt = $pdo->query('SELECT b.id, b.paid, b.status, b.created_at, c.name AS cabin_name, b.customer_name FROM bookings b JOIN cabins c ON b.cabin_id=c.id ORDER BY b.created_at DESC');
 $rows = $stmt->fetchAll();
@@ -22,4 +22,4 @@ $rows = $stmt->fetchAll();
 </tbody>
 </table>
 </div>
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+

@@ -12,10 +12,8 @@ $locations = $pdo->query('SELECT DISTINCT location FROM cabins ORDER BY location
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Lomamökit</title>
   <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
-
 <main class="frontpage">
   <section class="search-hero">
     <div class="overlay">

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
+require './includes/header.php';
 
 // Quick stats
 $totalCabins = $pdo->query('SELECT COUNT(*) FROM cabins')->fetchColumn();
@@ -57,5 +57,3 @@ $income = $pdo->query('SELECT IFNULL(SUM(paid),0) FROM bookings')->fetchColumn()
   </tbody>
 </table>
 </div>
-
-<?php require_once __DIR__ . '/includes/footer.php'; ?>

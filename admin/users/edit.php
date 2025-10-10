@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
 $id = intval($_GET['id'] ?? 0);
 $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id');
 $stmt->execute(['id'=>$id]);
@@ -27,4 +27,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <button class="btn btn-primary">Tallenna</button>
   <a class="btn btn-secondary" href="view.php?id=<?php echo $u['id']; ?>">Peruuta</a>
 </form>
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+

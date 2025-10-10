@@ -6,6 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
 $locations = [
     'Helsinki','Espoo','Tampere','Vantaa','Oulu','Turku',
     'Jyväskylä','Lahti','Kuopio','Pori','Lappeenranta','Vaasa',
@@ -13,35 +14,38 @@ $locations = [
     'Salo','Mikkeli','Hyvinkää','Nokia','Kajaani','Savonlinna',
     'Riihimäki','Kerava','Kemi','Kokkola','Loimaa','Raisio'
 ];
+
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) die('Mökkiä ei löytynyt.');
 
-$stmt = $pdo->prepare("SELECT id, name, description, price_per_night, max_guests, location, image FROM cabins WHERE id = ? AND owner_id = ?");
+// Hae mökki ja tarkista omistajuus
+$stmt = $pdo->prepare("SELECT * FROM cabins WHERE id = ? AND owner_id = ?");
 $stmt->execute([$id, $_SESSION['user_id']]);
-$cabin = $stmt->fetch();
+$cabin = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$cabin) die('Et voi muokata tätä mökkiä.');
 
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
-    $description = trim($_POST['description']);
-    $price = $_POST['price_per_night'];
-    $maxGuests = $_POST['max_guests'];
-    $location = trim($_POST['location']);
+    $name = trim($_POST['name'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $price = floatval($_POST['price_per_night'] ?? 0);
+    $maxGuests = (int)($_POST['max_guests'] ?? 1);
+    $location = trim($_POST['location'] ?? '');
     $image = $cabin['image'];
 
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+    // Kuvan käsittely
+    if (!empty($_FILES['image']['tmp_name']) && $_FILES['image']['error'] === 0) {
         $targetDir = "uploads/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
 
-        $fileTmp  = $_FILES["image"]["tmp_name"];
-        $fileName = basename($_FILES["image"]["name"]);
+        $fileTmp  = $_FILES['image']['tmp_name'];
+        $fileName = basename($_FILES['image']['name']);
         $fileExt  = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $allowed  = ['jpg','jpeg','png'];
 
         $check = getimagesize($fileTmp);
-        if($check !== false && in_array($fileExt, $allowed)) {
+        if ($check !== false && in_array($fileExt, $allowed)) {
             $targetFile = $targetDir . time() . "_" . $fileName;
             if (move_uploaded_file($fileTmp, $targetFile)) {
                 $image = $targetFile;
@@ -49,10 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "Kuvan lataus epäonnistui.";
             }
         } else {
-            $message = "Vain JPG, JPEG, ja PNG kuvat sallittu.";
+            $message = "Vain JPG, JPEG ja PNG kuvat sallittu.";
         }
     }
 
+    // Päivitä tiedot tietokantaan
     if (!$message) {
         $stmt = $pdo->prepare("
             UPDATE cabins
@@ -60,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE id = ? AND owner_id = ?
         ");
         $stmt->execute([$name, $description, $price, $maxGuests, $image, $location, $id, $_SESSION['user_id']]);
-        $message = "Päivitetty!";
+
+        $message = "Mökki päivitetty onnistuneesti!";
         $cabin = array_merge($cabin, [
             'name'=>$name,
             'description'=>$description,
@@ -71,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
     }
 }
-
 ?>
+
 <!doctype html>
 <html lang="fi">
 <head>
@@ -93,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="text" name="name" value="<?=htmlspecialchars($cabin['name'])?>" required>
         </label>
         <label>Kuvaus
-          <textarea name="description"style="height: 188px; width: 480px;font-size: 17;" ><?=htmlspecialchars($cabin['description']) ?> </textarea> 
+          <textarea name="description" style="height:188px; width:480px; font-size:17px;" required><?=htmlspecialchars($cabin['description'])?></textarea>
         </label>
         <label>Hinta / yö
           <input type="number" step="0.01" name="price_per_night" value="<?=htmlspecialchars($cabin['price_per_night'])?>" required>

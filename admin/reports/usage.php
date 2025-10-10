@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../includes/header.php';
+require '../includes/header.php';
+
 
 // (viimeisimmät 12 kuukautta)
 $stmt = $pdo->query("SELECT DATE_FORMAT(created_at, '%Y-%m') AS ym, COUNT(*) AS cnt FROM bookings GROUP BY ym ORDER BY ym DESC LIMIT 12");
@@ -15,4 +16,3 @@ $rows = $stmt->fetchAll();
 <?php endforeach; ?>
 </tbody>
 </table>
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>

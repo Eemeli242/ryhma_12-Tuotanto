@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config.php'; // adjust path if needed
+require '../../config.php'; // adjust path if needed
 
 // If already logged in and admin, go to dashboard
 if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'admin') {
